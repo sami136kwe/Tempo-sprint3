@@ -17,9 +17,10 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
  */
 int main(int argc, char *argv[]) {
   if (argc == 2) {
-    if (strcmp(argv[1], "describe") == 0)
-      printf("An empty timeseries with origin 2025-09-01T09:00:00\n");
-    else if (strcmp(argv[1], "help") == 0)
+    if (strcmp(argv[1], "describe") == 0) {
+      printf("Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]\n");
+      printf("Size: 0\n");
+    } else if (strcmp(argv[1], "help") == 0)
       printf(HELP);
     return 0;
   }
