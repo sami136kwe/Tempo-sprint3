@@ -27,6 +27,16 @@ setup() {
   assert_line --index 1 "Size: 1"
 }
 
+@test "tempo show with empty timeseries displays the observations" {
+  run tempo show < "$examples_dir/empty.ts"
+  assert_output ""
+}
+
+@test "tempo show with timeseries of size 1 displays the observations" {
+  run tempo show < "$examples_dir/1.ts"
+  assert_output "2025-09-01T09:00:00 10"
+}
+
 # Wrong usage
 # -----------
 

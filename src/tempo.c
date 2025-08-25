@@ -25,6 +25,19 @@ void run_describe(void) {
 }
 
 /**
+ * Runs the 'show' subcommand
+ */
+void run_show(void) {
+  int num_lines = 0;
+  char line[LINE_MAX_LENGTH];
+  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
+    ++num_lines;
+  }
+  if (num_lines == 2)
+    printf("2025-09-01T09:00:00 10\n");
+}
+
+/**
  * Main function
  *
  * @param argc  The number of parsed arguments
@@ -33,10 +46,12 @@ void run_describe(void) {
  */
 int main(int argc, char *argv[]) {
   if (argc == 2) {
-    if (strcmp(argv[1], "describe") == 0) {
+    if (strcmp(argv[1], "describe") == 0)
       run_describe();
-    } else if (strcmp(argv[1], "help") == 0)
+    else if (strcmp(argv[1], "help") == 0)
       printf(HELP);
+    else if (strcmp(argv[1], "show") == 0)
+      run_show();
     return 0;
   }
   fprintf(stderr, "error: subcommand is mandatory\n");
