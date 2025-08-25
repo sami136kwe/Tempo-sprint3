@@ -10,6 +10,8 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
 
 // The maximum length of a read line
 #define LINE_MAX_LENGTH 100
+// A fixed datetime
+#define DATETIME "2025-09-01T09:00:00"
 
 /**
  * Runs the 'describe' subcommand
@@ -20,7 +22,7 @@ void run_describe(void) {
   while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
     ++num_lines;
   }
-  printf("Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]\n");
+  printf("Range: [%s, %s]\n", DATETIME, DATETIME);
   printf("Size: %d\n", num_lines - 1);
 }
 
@@ -34,7 +36,7 @@ void run_show(void) {
     ++num_lines;
   }
   if (num_lines == 2)
-    printf("2025-09-01T09:00:00 10\n");
+    printf("%s 10\n", DATETIME);
 }
 
 /**
@@ -46,11 +48,12 @@ void run_show(void) {
  */
 int main(int argc, char *argv[]) {
   if (argc == 2) {
-    if (strcmp(argv[1], "describe") == 0)
+    const char* subcommand = argv[1];
+    if (strcmp(subcommand, "describe") == 0)
       run_describe();
-    else if (strcmp(argv[1], "help") == 0)
+    else if (strcmp(subcommand, "help") == 0)
       printf(HELP);
-    else if (strcmp(argv[1], "show") == 0)
+    else if (strcmp(subcommand, "show") == 0)
       run_show();
     return 0;
   }
