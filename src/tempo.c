@@ -15,6 +15,8 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
 #define LINE_MAX_LENGTH 100
 // The length of a datetime
 #define DATETIME_LENGTH 19
+// The maximum size of a timeseries
+#define MAX_SIZE 1000
 
 // Types
 // -----
@@ -25,6 +27,8 @@ struct Timeseries {
   char start_datetime[DATETIME_LENGTH + 1];
   // The size of the timeseries
   unsigned int size;
+  // The observed values
+  int values[MAX_SIZE];
 };
 
 // Functions
@@ -52,14 +56,18 @@ void set_start_datetime_from_stdin(struct Timeseries* timeseries) {
 }
 
 /**
- * Set the size of the timeseries from stdin
+ * Set the observations of the timeseries from stdin
  *
  * @param timeseries  The timeseries to set
  */
-void set_size_from_stdin(struct Timeseries* timeseries) {
+void set_observations_from_stdin(struct Timeseries* timeseries) {
   char line[LINE_MAX_LENGTH];
-  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL)
+  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
+    int offset, value;
+    sscanf(line, "%d %d", &offset, &value);
+    timeseries->values[timeseries->size] = value;
     ++timeseries->size;
+  }
 }
 
 /**
@@ -79,8 +87,8 @@ void print_timeseries_stats(const struct Timeseries* timeseries) {
  * @param timeseries  The timeseries to print
  */
 void print_timeseries_observations(const struct Timeseries* timeseries) {
-  if (timeseries->size != 0)
-    printf("%s 10\n", timeseries->start_datetime);
+  for (size_t i = 0; i < timeseries->size; ++i)
+    printf("%s %d\n", timeseries->start_datetime, timeseries->values[i]);
 }
 
 /**
@@ -90,7 +98,7 @@ void run_describe(void) {
   struct Timeseries timeseries;
   initialize_timeseries(&timeseries);
   set_start_datetime_from_stdin(&timeseries);
-  set_size_from_stdin(&timeseries);
+  set_observations_from_stdin(&timeseries);
   print_timeseries_stats(&timeseries);
 }
 
@@ -101,7 +109,7 @@ void run_show(void) {
   struct Timeseries timeseries;
   initialize_timeseries(&timeseries);
   set_start_datetime_from_stdin(&timeseries);
-  set_size_from_stdin(&timeseries);
+  set_observations_from_stdin(&timeseries);
   print_timeseries_observations(&timeseries);
 }
 
