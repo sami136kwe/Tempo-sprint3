@@ -23,6 +23,8 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
 struct Timeseries {
   // The start datetime
   char start_datetime[DATETIME_LENGTH + 1];
+  // The size of the timeseries
+  unsigned int size;
 };
 
 // Functions
@@ -41,33 +43,37 @@ void set_start_datetime_from_stdin(struct Timeseries* timeseries) {
 }
 
 /**
+ * Set the size of the timeseries from stdin
+ *
+ * @param timeseries  The timeseries to set
+ */
+void set_size_from_stdin(struct Timeseries* timeseries) {
+  char line[LINE_MAX_LENGTH];
+  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
+    ++timeseries->size;
+  }
+}
+
+/**
  * Runs the 'describe' subcommand
  */
 void run_describe(void) {
-  int num_lines = 0;
   struct Timeseries timeseries;
   set_start_datetime_from_stdin(&timeseries);
-  char line[LINE_MAX_LENGTH];
-  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
-    ++num_lines;
-  }
+  set_size_from_stdin(&timeseries);
   printf("Range: [%s, %s]\n",
          timeseries.start_datetime, timeseries.start_datetime);
-  printf("Size: %d\n", num_lines);
+  printf("Size: %d\n", timeseries.size);
 }
 
 /**
  * Runs the 'show' subcommand
  */
 void run_show(void) {
-  int num_lines = 0;
   struct Timeseries timeseries;
   set_start_datetime_from_stdin(&timeseries);
-  char line[LINE_MAX_LENGTH];
-  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
-    ++num_lines;
-  }
-  if (num_lines == 1)
+  set_size_from_stdin(&timeseries);
+  if (timeseries.size == 1)
     printf("%s 10\n", timeseries.start_datetime);
 }
 
