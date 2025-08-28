@@ -55,15 +55,34 @@ void set_size_from_stdin(struct Timeseries* timeseries) {
 }
 
 /**
+ * Prints the statistics of a timeseries to stdout
+ *
+ * @param timeseries  The timeseries to print
+ */
+void print_timeseries_stats(const struct Timeseries* timeseries) {
+  printf("Range: [%s, %s]\n",
+         timeseries->start_datetime, timeseries->start_datetime);
+  printf("Size: %d\n", timeseries->size);
+}
+
+/**
+ * Prints the observations of a timeseries to stdout
+ *
+ * @param timeseries  The timeseries to print
+ */
+void print_timeseries_observations(const struct Timeseries* timeseries) {
+  if (timeseries->size != 0)
+    printf("%s 10\n", timeseries->start_datetime);
+}
+
+/**
  * Runs the 'describe' subcommand
  */
 void run_describe(void) {
   struct Timeseries timeseries;
   set_start_datetime_from_stdin(&timeseries);
   set_size_from_stdin(&timeseries);
-  printf("Range: [%s, %s]\n",
-         timeseries.start_datetime, timeseries.start_datetime);
-  printf("Size: %d\n", timeseries.size);
+  print_timeseries_stats(&timeseries);
 }
 
 /**
@@ -73,8 +92,7 @@ void run_show(void) {
   struct Timeseries timeseries;
   set_start_datetime_from_stdin(&timeseries);
   set_size_from_stdin(&timeseries);
-  if (timeseries.size == 1)
-    printf("%s 10\n", timeseries.start_datetime);
+  print_timeseries_observations(&timeseries);
 }
 
 /**
