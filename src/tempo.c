@@ -31,6 +31,14 @@ struct Timeseries {
 // ---------
 
 /**
+ * Initializes an empty timeseries
+ */
+void initialize_timeseries(struct Timeseries* timeseries) {
+  strcpy(timeseries->start_datetime, "");
+  timeseries->size = 0;
+}
+
+/**
  * Set the start datetime of the timeseries from stdin
  *
  * @param timeseries  The timeseries to set
@@ -80,6 +88,7 @@ void print_timeseries_observations(const struct Timeseries* timeseries) {
  */
 void run_describe(void) {
   struct Timeseries timeseries;
+  initialize_timeseries(&timeseries);
   set_start_datetime_from_stdin(&timeseries);
   set_size_from_stdin(&timeseries);
   print_timeseries_stats(&timeseries);
@@ -90,6 +99,7 @@ void run_describe(void) {
  */
 void run_show(void) {
   struct Timeseries timeseries;
+  initialize_timeseries(&timeseries);
   set_start_datetime_from_stdin(&timeseries);
   set_size_from_stdin(&timeseries);
   print_timeseries_observations(&timeseries);
