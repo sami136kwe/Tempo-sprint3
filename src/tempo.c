@@ -37,8 +37,10 @@ struct Timeseries {
  */
 void set_start_datetime_from_stdin(struct Timeseries* timeseries) {
   char line[LINE_MAX_LENGTH];
-  if (fgets(line, LINE_MAX_LENGTH, stdin) != NULL)
+  if (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
     strncpy(timeseries->start_datetime, line, DATETIME_LENGTH);
+    timeseries->start_datetime[DATETIME_LENGTH] = '\0';
+  }
 }
 
 /**
