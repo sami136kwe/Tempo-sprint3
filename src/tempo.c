@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "timeseries.h"
+
 // Constants
 // ---------
 
@@ -11,95 +13,18 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
   help: shows this message\n"
 
-// The maximum length of a read line
-#define LINE_MAX_LENGTH 100
-// The length of a datetime
-#define DATETIME_LENGTH 19
-// The maximum size of a timeseries
-#define MAX_SIZE 1000
-
-// Types
-// -----
-
-// A timeseries
-struct Timeseries {
-  // The start datetime
-  char start_datetime[DATETIME_LENGTH + 1];
-  // The size of the timeseries
-  unsigned int size;
-  // The observed values
-  int values[MAX_SIZE];
-};
-
-// Functions
-// ---------
-
-/**
- * Initializes an empty timeseries
- */
-void initialize_timeseries(struct Timeseries* timeseries) {
-  strcpy(timeseries->start_datetime, "");
-  timeseries->size = 0;
-}
-
-/**
- * Set the start datetime of the timeseries from stdin
- *
- * @param timeseries  The timeseries to set
- */
-void set_start_datetime_from_stdin(struct Timeseries* timeseries) {
-  char line[LINE_MAX_LENGTH];
-  if (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
-    strncpy(timeseries->start_datetime, line, DATETIME_LENGTH);
-    timeseries->start_datetime[DATETIME_LENGTH] = '\0';
-  }
-}
-
-/**
- * Set the observations of the timeseries from stdin
- *
- * @param timeseries  The timeseries to set
- */
-void set_observations_from_stdin(struct Timeseries* timeseries) {
-  char line[LINE_MAX_LENGTH];
-  while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
-    int offset, value;
-    sscanf(line, "%d %d", &offset, &value);
-    timeseries->values[timeseries->size] = value;
-    ++timeseries->size;
-  }
-}
-
-/**
- * Prints the statistics of a timeseries to stdout
- *
- * @param timeseries  The timeseries to print
- */
-void print_timeseries_stats(const struct Timeseries* timeseries) {
-  printf("Range: [%s, %s]\n",
-         timeseries->start_datetime, timeseries->start_datetime);
-  printf("Size: %d\n", timeseries->size);
-}
-
-/**
- * Prints the observations of a timeseries to stdout
- *
- * @param timeseries  The timeseries to print
- */
-void print_timeseries_observations(const struct Timeseries* timeseries) {
-  for (size_t i = 0; i < timeseries->size; ++i)
-    printf("%s %d\n", timeseries->start_datetime, timeseries->values[i]);
-}
+// Help functions
+// --------------
 
 /**
  * Runs the 'describe' subcommand
  */
 void run_describe(void) {
   struct Timeseries timeseries;
-  initialize_timeseries(&timeseries);
-  set_start_datetime_from_stdin(&timeseries);
-  set_observations_from_stdin(&timeseries);
-  print_timeseries_stats(&timeseries);
+  timeseries_initialize(&timeseries);
+  timeseries_set_start_datetime_from_stdin(&timeseries);
+  timeseries_set_observations_from_stdin(&timeseries);
+  timeseries_print_stats(&timeseries);
 }
 
 /**
@@ -107,11 +32,14 @@ void run_describe(void) {
  */
 void run_show(void) {
   struct Timeseries timeseries;
-  initialize_timeseries(&timeseries);
-  set_start_datetime_from_stdin(&timeseries);
-  set_observations_from_stdin(&timeseries);
-  print_timeseries_observations(&timeseries);
+  timeseries_initialize(&timeseries);
+  timeseries_set_start_datetime_from_stdin(&timeseries);
+  timeseries_set_observations_from_stdin(&timeseries);
+  timeseries_print_observations(&timeseries);
 }
+
+// Main
+// ----
 
 /**
  * Main function
