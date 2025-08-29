@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 // Constants
 // ---------
@@ -29,9 +30,14 @@ void timeseries_set_observations_from_stdin(struct Timeseries* timeseries) {
   char line[LINE_MAX_LENGTH];
   while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
     int offset, value;
-    sscanf(line, "%d %d", &offset, &value);
-    timeseries->values[timeseries->size] = value;
-    ++timeseries->size;
+    if (sscanf(line, "%d %d", &offset, &value) == 2) {
+      timeseries->offsets[timeseries->size] = offset;
+      timeseries->values[timeseries->size] = value;
+      ++timeseries->size;
+    } else {
+      fprintf(stderr, "error: could not retrieve values for line %s", line);
+      exit(1);
+    }
   }
 }
 

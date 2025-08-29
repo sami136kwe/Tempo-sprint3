@@ -7,7 +7,7 @@
 // The length of a datetime
 #define DATETIME_LENGTH 19
 // The maximum size of a timeseries
-#define MAX_SIZE 1000
+#define MAX_SIZE 100
 
 // Types
 // -----
@@ -18,6 +18,8 @@ struct Timeseries {
   char start_datetime[DATETIME_LENGTH + 1];
   // The size of the timeseries
   unsigned int size;
+  // The offsets of the observations
+  int offsets[MAX_SIZE];
   // The observed values
   int values[MAX_SIZE];
 };
