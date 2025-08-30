@@ -12,7 +12,8 @@ Displays information about a timeseries.\n\
 \n\
 SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
-  help: shows this message\n"
+  help: shows this message\n\
+  show: list the observations of the timeseries\n"
 
 // Help functions
 // --------------

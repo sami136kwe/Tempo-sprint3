@@ -13,6 +13,9 @@ setup() {
   run tempo help
   assert_line --index 0 "Usage: tempo SUBCOMMAND"
   assert_line --index 1 "Displays information about a timeseries."
+  assert_line --partial "  describe:"
+  assert_line --partial "  help:"
+  assert_line --partial "  show:"
 }
 
 # Wrong usage
