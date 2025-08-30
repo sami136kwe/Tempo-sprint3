@@ -7,7 +7,7 @@
 // The length of a datetime
 #define DATETIME_LENGTH 19
 // The maximum size of a timeseries
-#define MAX_SIZE 100
+#define MAX_SIZE 1000
 
 // Types
 // -----
