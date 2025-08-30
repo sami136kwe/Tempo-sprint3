@@ -42,12 +42,12 @@ setup() {
 
 @test "tempo without subcommand returns an error" {
   run tempo
-  assert_failure
+  [ "$status" -eq 1 ]
   assert_line --index 0 "error: subcommand is mandatory"
 }
 
 @test "tempo with unrecognized subcommand returns an error" {
   run tempo sc
-  assert_failure
+  [ "$status" -eq 1 ]
   assert_line --index 0 "error: unrecognized subcommand 'sc'"
 }
