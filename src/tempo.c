@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "timeseries.h"
@@ -38,6 +39,16 @@ void run_show(void) {
   timeseries_print_observations(&timeseries);
 }
 
+/**
+ * Reports that an unrecognized subcommand has been provided
+ *
+ * @param subcommand  The provided subcommand
+ */
+void report_unrecognized_subcommand(const char* subcommand) {
+  fprintf(stderr, "error: unrecognized subcommand '%s'", subcommand);
+  exit(1);
+}
+
 // Main
 // ----
 
@@ -49,7 +60,7 @@ void run_show(void) {
  * @return      0 if usage is normal, 1 otherwise
  */
 int main(int argc, char *argv[]) {
-  if (argc == 2) {
+  if (argc >= 2) {
     const char* subcommand = argv[1];
     if (strcmp(subcommand, "describe") == 0)
       run_describe();
@@ -57,6 +68,8 @@ int main(int argc, char *argv[]) {
       printf(HELP);
     else if (strcmp(subcommand, "show") == 0)
       run_show();
+    else
+      report_unrecognized_subcommand(subcommand);
     return 0;
   }
   fprintf(stderr, "error: subcommand is mandatory\n");

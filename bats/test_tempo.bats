@@ -45,3 +45,9 @@ setup() {
   assert_failure
   assert_line --index 0 "error: subcommand is mandatory"
 }
+
+@test "tempo with unrecognized subcommand returns an error" {
+  run tempo sc
+  assert_failure
+  assert_line --index 0 "error: unrecognized subcommand 'sc'"
+}
