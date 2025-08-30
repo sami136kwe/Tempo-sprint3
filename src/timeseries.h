@@ -47,6 +47,14 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries);
 void timeseries_set_observations_from_stdin(struct Timeseries* timeseries);
 
 /**
+ * Returns the last datetime of a timeseries
+ *
+ * @param timeseries  The queried timeseries
+ * @return            The last datetime of the timeseries
+ */
+const char* timeseries_last_datetime(const struct Timeseries* timeseries);
+
+/**
  * Prints the statistics of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print

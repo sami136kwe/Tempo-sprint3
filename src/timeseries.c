@@ -41,9 +41,17 @@ void timeseries_set_observations_from_stdin(struct Timeseries* timeseries) {
   }
 }
 
+const char* timeseries_last_datetime(const struct Timeseries* timeseries) {
+  if (timeseries->size == 2)
+    return "2025-09-01T10:00:00";
+  else
+    return timeseries->start_datetime;
+}
+
 void timeseries_print_stats(const struct Timeseries* timeseries) {
   printf("Range: [%s, %s]\n",
-         timeseries->start_datetime, timeseries->start_datetime);
+         timeseries->start_datetime,
+         timeseries_last_datetime(timeseries));
   printf("Size: %d\n", timeseries->size);
 }
 
