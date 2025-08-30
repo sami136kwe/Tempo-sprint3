@@ -1,4 +1,8 @@
-CFLAGS = -Wall -Wextra
+CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
+				 -Wsign-conversion -Wformat=2 -Wcast-qual -Wpointer-arith \
+         -Wstrict-prototypes -Wlogical-op -Wduplicated-cond \
+				 -Wduplicated-branches -Wnull-dereference -Wjump-misses-init \
+				 -fanalyzer
 exec = tempo
 
 .PHONY: build clean
