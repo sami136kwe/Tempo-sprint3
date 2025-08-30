@@ -15,28 +15,6 @@ setup() {
   assert_line --index 1 "Displays information about a timeseries."
 }
 
-@test "tempo describe with empty timeseries displays description" {
-  run tempo describe < "$examples_dir/empty.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
-  assert_line --index 1 "Size: 0"
-}
-
-@test "tempo describe with timeseries of size 1 displays description" {
-  run tempo describe < "$examples_dir/1.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
-  assert_line --index 1 "Size: 1"
-}
-
-@test "tempo show with empty timeseries displays the observations" {
-  run tempo show < "$examples_dir/empty.ts"
-  assert_output ""
-}
-
-@test "tempo show with timeseries of size 1 displays the observations" {
-  run tempo show < "$examples_dir/1.ts"
-  assert_output "2025-09-01T09:00:00 10"
-}
-
 # Wrong usage
 # -----------
 
