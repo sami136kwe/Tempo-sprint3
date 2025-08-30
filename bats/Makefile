@@ -1,12 +1,8 @@
-.PHONY: count test
+tests = test_tempo test_describe test_show
 
-test: test_tempo test_describe test_show
+.PHONY: test
 
-test_tempo:
-	bats-core/bin/bats test_tempo.bats
+test: $(tests)
 
-test_describe:
-	bats-core/bin/bats test_describe.bats
-
-test_show:
-	bats-core/bin/bats test_show.bats
+$(tests):
+	bats-core/bin/bats $@.bats
