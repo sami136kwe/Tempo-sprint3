@@ -14,7 +14,7 @@
 
 // A timeseries
 struct Timeseries {
-  // The start datetime
+  // The start datetime of the timeseries
   char start_datetime[DATETIME_LENGTH + 1];
   // The size of the timeseries
   unsigned int size;
@@ -47,12 +47,12 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries);
 void timeseries_set_observations_from_stdin(struct Timeseries* timeseries);
 
 /**
- * Returns the last datetime of a timeseries
+ * Sets a string to the last datetime of a timeseries
  *
+ * @param s           The string to set
  * @param timeseries  The queried timeseries
- * @return            The last datetime of the timeseries
  */
-const char* timeseries_last_datetime(const struct Timeseries* timeseries);
+void timeseries_set_last_datetime(char* s, const struct Timeseries* timeseries);
 
 /**
  * Prints the statistics of a timeseries to stdout
