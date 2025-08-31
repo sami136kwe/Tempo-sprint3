@@ -5,48 +5,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "datetime.h"
+
 // Constants
 // ---------
 
 // The maximum length of a read line
 #define LINE_MAX_LENGTH 100
-
-// Help functions
-// --------------
-
-/**
- * Initializes a 'struct tm' instance from given fields
- *
- * @param tm     The struct to initialize
- * @param year   The year field
- * @param month  The month field
- * @param day    The day of month field
- * @param hour   The hour field
- * @param min    The minute field
- * @param sec    The second field
- */
-void initialize_tm_from_fields(struct tm* tm, int year, int month, int day,
-                               int hour, int min, int sec) {
-  tm->tm_year = year;
-  tm->tm_mon = month;
-  tm->tm_mday = day;
-  tm->tm_hour = hour;
-  tm->tm_min = min;
-  tm->tm_sec = sec;
-  tm->tm_isdst = -1;
-}
-
-/**
- * Returns a RFC3339 datetime string from a 'struct tm' instance
- *
- * @param s   The string in which the datetime will be stored
- * @param tm  The tm insance
- */
-void initialize_rfc3339_string_from_tm(char* s, const struct tm* tm) {
-  sprintf(s, "%.4d-%.2d-%.2dT%.2d:%.2d:%.2d",
-          tm->tm_year, tm->tm_mon, tm->tm_mday,
-          tm->tm_hour, tm->tm_min, tm->tm_sec);
-}
 
 // Functions
 // ---------

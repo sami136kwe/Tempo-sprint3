@@ -9,10 +9,13 @@ exec = tempo
 
 build: $(exec)
 
-$(exec): $(exec).o timeseries.o
+$(exec): $(exec).o datetime.o timeseries.o
 	gcc $(CFLAGS) -o $@ $^
 
 $(exec).o: $(exec).c
+	gcc $(CFLAGS) -c -o $@ $<
+
+datetime.o: datetime.c datetime.h
 	gcc $(CFLAGS) -c -o $@ $<
 
 timeseries.o: timeseries.c timeseries.h
