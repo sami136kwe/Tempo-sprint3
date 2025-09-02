@@ -35,6 +35,13 @@ struct Timeseries {
 void timeseries_initialize_from_stdin(struct Timeseries* timeseries);
 
 /**
+ * Deletes a timeseries
+ *
+ * @param timeseries  The timeseries to delete
+ */
+void timeseries_delete(struct Timeseries* timeseries);
+
+/**
  * Prints the statistics of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print

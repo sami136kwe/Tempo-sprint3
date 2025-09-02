@@ -60,8 +60,12 @@ void timeseries_set_observations_from_stdin(struct Timeseries* timeseries) {
  * @param timeseries  The timeseries to set
  */
 void timeseries_set_last_datetime(struct Timeseries* timeseries) {
-  int hour = timeseries->size == 2 ? 10 : 9;
-  datetime_initialize(&timeseries->last_datetime, 2025, 9, 1, hour, 0, 0);
+  int max_offset = 0;
+  for (size_t i = 0; i < timeseries->size; ++i)
+    max_offset = timeseries->offsets[i] > max_offset ?
+      timeseries->offsets[i] : max_offset;
+  timeseries->last_datetime = datetime_copy(&timeseries->start_datetime);
+  datetime_add_seconds(&timeseries->last_datetime, max_offset);
 }
 
 // Functions
@@ -72,6 +76,11 @@ void timeseries_initialize_from_stdin(struct Timeseries* timeseries) {
   timeseries_set_start_datetime_from_stdin(timeseries);
   timeseries_set_observations_from_stdin(timeseries);
   timeseries_set_last_datetime(timeseries);
+}
+
+void timeseries_delete(struct Timeseries* timeseries) {
+  datetime_delete(&timeseries->start_datetime);
+  datetime_delete(&timeseries->last_datetime);
 }
 
 void timeseries_print_stats(const struct Timeseries* timeseries) {
