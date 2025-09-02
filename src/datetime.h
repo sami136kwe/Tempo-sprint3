@@ -3,26 +3,45 @@
 
 #include <time.h>
 
-/**
- * Initializes a 'struct tm' instance from given fields
- *
- * @param tm     The struct to initialize
- * @param year   The year field
- * @param month  The month field
- * @param day    The day of month field
- * @param hour   The hour field
- * @param min    The minute field
- * @param sec    The second field
- */
-void initialize_tm_from_fields(struct tm* tm, int year, int month, int day,
-                               int hour, int min, int sec);
+// Constants
+// ---------
+
+// The length of a datetime
+#define DATETIME_LENGTH 19
+
+// Types
+// -----
+
+struct Datetime {
+  // The 'struct tm' representation of the datetime
+  struct tm tm;
+  // The string representation of the datetime
+  char string[DATETIME_LENGTH + 1];
+};
+
+// Functions
+// ---------
 
 /**
- * Returns a RFC3339 datetime string from a 'struct tm' instance
+ * Initializes a datetime
+ *
+ * @param datetime  The datetime to initialize
+ * @param year      The year
+ * @param month     The month
+ * @param day       The day
+ * @param hour      The hours
+ * @param min       The minutes
+ * @param sec       The seconds
+ */
+void datetime_initialize(struct Datetime* tm, int year, int month, int day,
+                         int hour, int min, int sec);
+
+/**
+ * Returns a RFC3339 string representation of the datetime
  *
  * @param s   The string in which the datetime will be stored
  * @param tm  The tm insance
  */
-void initialize_rfc3339_string_from_tm(char* s, const struct tm* tm);
+const char* datetime_to_rfc3339_string(const struct Datetime* datetime);
 
 #endif
