@@ -23,9 +23,7 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
  */
 void run_describe(void) {
   struct Timeseries timeseries;
-  timeseries_initialize(&timeseries);
-  timeseries_set_start_datetime_from_stdin(&timeseries);
-  timeseries_set_observations_from_stdin(&timeseries);
+  timeseries_initialize_from_stdin(&timeseries);
   timeseries_print_stats(&timeseries);
 }
 
@@ -34,9 +32,7 @@ void run_describe(void) {
  */
 void run_show(void) {
   struct Timeseries timeseries;
-  timeseries_initialize(&timeseries);
-  timeseries_set_start_datetime_from_stdin(&timeseries);
-  timeseries_set_observations_from_stdin(&timeseries);
+  timeseries_initialize_from_stdin(&timeseries);
   timeseries_print_observations(&timeseries);
 }
 

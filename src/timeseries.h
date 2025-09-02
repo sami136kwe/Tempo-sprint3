@@ -1,11 +1,11 @@
 #ifndef TIMESERIES_H
 #define TIMESERIES_H
 
+#include "datetime.h"
+
 // Constants
 // ---------
 
-// The length of a datetime
-#define DATETIME_LENGTH 19
 // The maximum size of a timeseries
 #define MAX_SIZE 1000
 
@@ -14,8 +14,10 @@
 
 // A timeseries
 struct Timeseries {
-  // The start datetime
-  char start_datetime[DATETIME_LENGTH + 1];
+  // The start datetime of the timeseries
+  struct Datetime start_datetime;
+  // The last datetime of the timeseries
+  struct Datetime last_datetime;
   // The size of the timeseries
   unsigned int size;
   // The offsets of the observations
@@ -30,21 +32,7 @@ struct Timeseries {
 /**
  * Initializes an empty timeseries
  */
-void timeseries_initialize(struct Timeseries* timeseries);
-
-/**
- * Set the start datetime of the timeseries from stdin
- *
- * @param timeseries  The timeseries to set
- */
-void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries);
-
-/**
- * Set the observations of the timeseries from stdin
- *
- * @param timeseries  The timeseries to set
- */
-void timeseries_set_observations_from_stdin(struct Timeseries* timeseries);
+void timeseries_initialize_from_stdin(struct Timeseries* timeseries);
 
 /**
  * Prints the statistics of a timeseries to stdout
