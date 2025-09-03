@@ -26,7 +26,7 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
   char line[LINE_MAX_LENGTH];
   fgets(line, LINE_MAX_LENGTH, stdin);
   int y, m, d, h, min, s;
-  if (sscanf(line, "%d-%d-%dT%d:%d:%d", &y, &m, &d, &h, &min, &s) == 6)
+  if (sscanf(line, "%4d-%2d-%2dT%2d:%2d:%2d", &y, &m, &d, &h, &min, &s) == 6)
     datetime_initialize(&timeseries->start_datetime, y, m, d, h, min, s);
   else {
     fprintf(stderr, "error: could not retrieve start datetime in line %s",

@@ -21,7 +21,7 @@ void datetime_initialize(struct Datetime* datetime,
   if (datetime->tm == NULL)
     report_memory_problem("when trying to initialize datetime->tm");
   datetime->tm->tm_year = year - 1900;
-  datetime->tm->tm_mon = month;
+  datetime->tm->tm_mon = month - 1;
   datetime->tm->tm_mday = day;
   datetime->tm->tm_hour = hour;
   datetime->tm->tm_min = min;
@@ -55,13 +55,8 @@ void datetime_delete(struct Datetime* datetime) {
 
 const char* datetime_to_rfc3339_string(const struct Datetime* datetime) {
   if (strcmp(datetime->string, "") == 0)
-    sprintf(datetime->string, "%.4d-%.2d-%.2dT%.2d:%.2d:%.2d",
-            datetime->tm->tm_year + 1900,
-            datetime->tm->tm_mon,
-            datetime->tm->tm_mday,
-            datetime->tm->tm_hour,
-            datetime->tm->tm_min,
-            datetime->tm->tm_sec);
+    strftime(datetime->string, DATETIME_LENGTH + 1, "%Y-%m-%dT%H:%M:%S",
+             datetime->tm);
   return datetime->string;
 }
 
