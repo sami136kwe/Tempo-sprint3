@@ -57,9 +57,19 @@ int timeseries_min_value(const struct Timeseries* timeseries);
  * Note: If the timeseries is empty, returns INT_MIN.
  *
  * @param timeseries  The queried timeseries
- * @return            The minimum value
+ * @return            The maximum value
  */
 int timeseries_max_value(const struct Timeseries* timeseries);
+
+/**
+ * Returns the duration in seconds of the timeseries
+ *
+ * Note: If the timeseries is empty, returns 0.
+ *
+ * @param timeseries  The queried timeseries
+ * @return            The duration
+ */
+unsigned int timeseries_duration(const struct Timeseries* timeseries);
 
 /**
  * Prints the statistics of a timeseries to stdout

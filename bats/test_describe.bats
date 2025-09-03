@@ -89,3 +89,31 @@ setup() {
   run tempo describe < "$examples_dir/2dbl.ts"
   assert_line "Size: 1"
 }
+
+# Duration
+# --------
+
+@test "tempo describe with empty timeseries displays the duration" {
+  run tempo describe < "$examples_dir/empty.ts"
+  assert_line "Duration: 0"
+}
+
+@test "tempo describe with timeseries of size 1 displays the duration" {
+  run tempo describe < "$examples_dir/1.ts"
+  assert_line "Duration: 0"
+}
+
+@test "tempo describe with chronological timeseries of size 2 displays the duration" {
+  run tempo describe < "$examples_dir/2.ts"
+  assert_line "Duration: 3600"
+}
+
+@test "tempo describe with antichronological timeseries of size 2 displays the duration" {
+  run tempo describe < "$examples_dir/2rev.ts"
+  assert_line "Duration: 3600"
+}
+
+@test "tempo describe with timeseries with repeated offsets displays the duration" {
+  run tempo describe < "$examples_dir/2dbl.ts"
+  assert_line "Duration: 0"
+}

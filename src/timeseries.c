@@ -149,6 +149,11 @@ int timeseries_max_value(const struct Timeseries* timeseries) {
   return m;
 }
 
+unsigned int timeseries_duration(const struct Timeseries* timeseries) {
+  return (unsigned int)datetime_diff(&timeseries->start_datetime,
+                                     &timeseries->last_datetime);
+}
+
 void timeseries_print_stats(const struct Timeseries* timeseries) {
   printf("Domain: [%s, %s]\n",
          datetime_to_rfc3339_string(&timeseries->start_datetime),
@@ -159,6 +164,7 @@ void timeseries_print_stats(const struct Timeseries* timeseries) {
     printf("Codomain: [%d, %d]\n", timeseries_min_value(timeseries),
                                    timeseries_max_value(timeseries));
   printf("Size: %d\n", timeseries->size);
+  printf("Duration: %d\n", timeseries_duration(timeseries));
 }
 
 void timeseries_print_observations(const struct Timeseries* timeseries) {

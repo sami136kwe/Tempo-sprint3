@@ -64,6 +64,14 @@ void datetime_delete(struct Datetime* datetime);
 const char* datetime_to_rfc3339_string(const struct Datetime* datetime);
 
 /**
+ * Returns the time difference between two datetimes
+ *
+ * Note: TODO what if the second datetime occurs before the first?
+ */
+int datetime_diff(const struct Datetime* datetime1,
+                  const struct Datetime* datetime2);
+
+/**
  * Adds a given number of seconds to a datetime
  *
  * @param datetime  The datetime to modify
