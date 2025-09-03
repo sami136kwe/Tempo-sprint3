@@ -60,6 +60,11 @@ const char* datetime_to_rfc3339_string(const struct Datetime* datetime) {
   return datetime->rfc3339_string;
 }
 
+int datetime_diff(const struct Datetime* datetime1,
+                  const struct Datetime* datetime2) {
+  return (int)difftime(datetime2->t, datetime1->t);
+}
+
 void datetime_add_seconds(struct Datetime* datetime, int seconds) {
   datetime->t += seconds;
   strcpy(datetime->rfc3339_string, "");

@@ -1,5 +1,6 @@
 #include "timeseries.h"
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -134,11 +135,43 @@ void timeseries_delete(struct Timeseries* timeseries) {
   datetime_delete(&timeseries->last_datetime);
 }
 
+int timeseries_min_value(const struct Timeseries* timeseries) {
+  int m = INT_MAX;
+  for (size_t i = 0; i < timeseries->size; ++i)
+    m = timeseries->values[i] < m ? timeseries->values[i] : m;
+  return m;
+}
+
+int timeseries_max_value(const struct Timeseries* timeseries) {
+  int m = INT_MIN;
+  for (size_t i = 0; i < timeseries->size; ++i)
+    m = timeseries->values[i] > m ? timeseries->values[i] : m;
+  return m;
+}
+
+unsigned int timeseries_duration(const struct Timeseries* timeseries) {
+  return (unsigned int)datetime_diff(&timeseries->start_datetime,
+                                     &timeseries->last_datetime);
+}
+
+unsigned int timeseries_amplitude(const struct Timeseries* timeseries) {
+  return timeseries->size == 0 ? 0
+    : (unsigned int)(timeseries_max_value(timeseries) -
+                     timeseries_min_value(timeseries));
+}
+
 void timeseries_print_stats(const struct Timeseries* timeseries) {
-  printf("Range: [%s, %s]\n",
+  printf("Domain: [%s, %s]\n",
          datetime_to_rfc3339_string(&timeseries->start_datetime),
          datetime_to_rfc3339_string(&timeseries->last_datetime));
+  if (timeseries->size == 0)
+    printf("Codomain: none\n");
+  else
+    printf("Codomain: [%d, %d]\n", timeseries_min_value(timeseries),
+                                   timeseries_max_value(timeseries));
   printf("Size: %d\n", timeseries->size);
+  printf("Duration: %d\n", timeseries_duration(timeseries));
+  printf("Amplitude: %d\n", timeseries_amplitude(timeseries));
 }
 
 void timeseries_print_observations(const struct Timeseries* timeseries) {
