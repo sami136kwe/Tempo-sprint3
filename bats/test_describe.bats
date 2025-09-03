@@ -8,30 +8,30 @@ setup() {
 
 @test "tempo describe with empty timeseries displays description" {
   run tempo describe < "$examples_dir/empty.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
-  assert_line --index 1 "Size: 0"
+  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+  assert_line "Size: 0"
 }
 
 @test "tempo describe with timeseries of size 1 works" {
   run tempo describe < "$examples_dir/1.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
-  assert_line --index 1 "Size: 1"
+  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+  assert_line "Size: 1"
 }
 
 @test "tempo describe with chronological timeseries of size 2 works" {
   run tempo describe < "$examples_dir/2.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
-  assert_line --index 1 "Size: 2"
+  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
+  assert_line "Size: 2"
 }
 
 @test "tempo describe with antichronological timeseries of size 2 works" {
   run tempo describe < "$examples_dir/2rev.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
-  assert_line --index 1 "Size: 2"
+  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
+  assert_line "Size: 2"
 }
 
 @test "tempo describe with timeseries with repeated offsets works" {
   run tempo describe < "$examples_dir/2dbl.ts"
-  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
-  assert_line --index 1 "Size: 1"
+  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+  assert_line "Size: 1"
 }

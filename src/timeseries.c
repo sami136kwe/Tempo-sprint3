@@ -135,7 +135,7 @@ void timeseries_delete(struct Timeseries* timeseries) {
 }
 
 void timeseries_print_stats(const struct Timeseries* timeseries) {
-  printf("Range: [%s, %s]\n",
+  printf("Time range: [%s, %s]\n",
          datetime_to_rfc3339_string(&timeseries->start_datetime),
          datetime_to_rfc3339_string(&timeseries->last_datetime));
   printf("Size: %d\n", timeseries->size);
