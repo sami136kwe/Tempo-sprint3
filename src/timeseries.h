@@ -44,6 +44,8 @@ void timeseries_delete(struct Timeseries* timeseries);
 /**
  * Returns the minimum value of the timeseries
  *
+ * Note: If the timeseries is empty, returns INT_MAX.
+ *
  * @param timeseries  The queried timeseries
  * @return            The minimum value
  */
@@ -51,6 +53,8 @@ int timeseries_min_value(const struct Timeseries* timeseries);
 
 /**
  * Returns the maximum value of the timeseries
+ *
+ * Note: If the timeseries is empty, returns INT_MIN.
  *
  * @param timeseries  The queried timeseries
  * @return            The minimum value
