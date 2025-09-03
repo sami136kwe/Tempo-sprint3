@@ -42,6 +42,22 @@ void timeseries_initialize_from_stdin(struct Timeseries* timeseries);
 void timeseries_delete(struct Timeseries* timeseries);
 
 /**
+ * Returns the minimum value of the timeseries
+ *
+ * @param timeseries  The queried timeseries
+ * @return            The minimum value
+ */
+int timeseries_min_value(const struct Timeseries* timeseries);
+
+/**
+ * Returns the maximum value of the timeseries
+ *
+ * @param timeseries  The queried timeseries
+ * @return            The minimum value
+ */
+int timeseries_max_value(const struct Timeseries* timeseries);
+
+/**
  * Prints the statistics of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print

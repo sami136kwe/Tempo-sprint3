@@ -6,32 +6,86 @@ setup() {
   examples_dir="$root_dir/examples"
 }
 
-@test "tempo describe with empty timeseries displays description" {
+# Domain
+# ------
+
+@test "tempo describe with empty timeseries displays the domain" {
   run tempo describe < "$examples_dir/empty.ts"
-  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+  assert_line "Domain: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+}
+
+@test "tempo describe with timeseries of size 1 displays the domain" {
+  run tempo describe < "$examples_dir/1.ts"
+  assert_line "Domain: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+}
+
+@test "tempo describe with chronological timeseries of size 2 displays the domain" {
+  run tempo describe < "$examples_dir/2.ts"
+  assert_line "Domain: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
+}
+
+@test "tempo describe with antichronological timeseries of size 2 displays the domain" {
+  run tempo describe < "$examples_dir/2rev.ts"
+  assert_line "Domain: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
+}
+
+@test "tempo describe with timeseries with repeated offsets displays the domain" {
+  run tempo describe < "$examples_dir/2dbl.ts"
+  assert_line "Domain: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+}
+
+# Codomain
+# --------
+
+@test "tempo describe with empty timeseries displays the codomain" {
+  run tempo describe < "$examples_dir/empty.ts"
+  assert_line "Codomain: none"
+}
+
+@test "tempo describe with timeseries of size 1 displays the codomain" {
+  run tempo describe < "$examples_dir/1.ts"
+  assert_line "Codomain: [10, 10]"
+}
+
+@test "tempo describe with chronological timeseries of size 2 displays the codomain" {
+  run tempo describe < "$examples_dir/2.ts"
+  assert_line "Codomain: [10, 20]"
+}
+
+@test "tempo describe with antichronological timeseries of size 2 displays the codomain" {
+  run tempo describe < "$examples_dir/2rev.ts"
+  assert_line "Codomain: [10, 20]"
+}
+
+@test "tempo describe with timeseries with repeated offsets displays the codomain" {
+  run tempo describe < "$examples_dir/2dbl.ts"
+  assert_line "Codomain: [20, 20]"
+}
+
+# Size
+# ----
+
+@test "tempo describe with empty timeseries displays the size" {
+  run tempo describe < "$examples_dir/empty.ts"
   assert_line "Size: 0"
 }
 
-@test "tempo describe with timeseries of size 1 works" {
+@test "tempo describe with timeseries of size 1 displays the size" {
   run tempo describe < "$examples_dir/1.ts"
-  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
   assert_line "Size: 1"
 }
 
-@test "tempo describe with chronological timeseries of size 2 works" {
+@test "tempo describe with chronological timeseries of size 2 displays the size" {
   run tempo describe < "$examples_dir/2.ts"
-  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
   assert_line "Size: 2"
 }
 
-@test "tempo describe with antichronological timeseries of size 2 works" {
+@test "tempo describe with antichronological timeseries of size 2 displays the size" {
   run tempo describe < "$examples_dir/2rev.ts"
-  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
   assert_line "Size: 2"
 }
 
-@test "tempo describe with timeseries with repeated offsets works" {
+@test "tempo describe with timeseries with repeated offsets displays the size" {
   run tempo describe < "$examples_dir/2dbl.ts"
-  assert_line "Time range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
   assert_line "Size: 1"
 }

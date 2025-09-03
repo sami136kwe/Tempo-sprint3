@@ -1,5 +1,6 @@
 #include "timeseries.h"
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -134,10 +135,29 @@ void timeseries_delete(struct Timeseries* timeseries) {
   datetime_delete(&timeseries->last_datetime);
 }
 
+int timeseries_min_value(const struct Timeseries* timeseries) {
+  int m = INT_MAX;
+  for (size_t i = 0; i < timeseries->size; ++i)
+    m = timeseries->values[i] < m ? timeseries->values[i] : m;
+  return m;
+}
+
+int timeseries_max_value(const struct Timeseries* timeseries) {
+  int m = INT_MIN;
+  for (size_t i = 0; i < timeseries->size; ++i)
+    m = timeseries->values[i] > m ? timeseries->values[i] : m;
+  return m;
+}
+
 void timeseries_print_stats(const struct Timeseries* timeseries) {
-  printf("Time range: [%s, %s]\n",
+  printf("Domain: [%s, %s]\n",
          datetime_to_rfc3339_string(&timeseries->start_datetime),
          datetime_to_rfc3339_string(&timeseries->last_datetime));
+  if (timeseries->size == 0)
+    printf("Codomain: none\n");
+  else
+    printf("Codomain: [%d, %d]\n", timeseries_min_value(timeseries),
+                                   timeseries_max_value(timeseries));
   printf("Size: %d\n", timeseries->size);
 }
 
