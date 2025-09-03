@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "utils.h"
+
 /**
  * Reports a memory problem with a given context
  *
@@ -17,51 +19,48 @@ void report_memory_problem(const char* context) {
 void datetime_initialize(struct Datetime* datetime,
                          int year, int month, int day,
                          int hour, int min, int sec) {
-  datetime->tm = malloc(sizeof(struct tm));
-  if (datetime->tm == NULL)
-    report_memory_problem("when trying to initialize datetime->tm");
-  datetime->tm->tm_year = year - 1900;
-  datetime->tm->tm_mon = month - 1;
-  datetime->tm->tm_mday = day;
-  datetime->tm->tm_hour = hour;
-  datetime->tm->tm_min = min;
-  datetime->tm->tm_sec = sec;
-  datetime->tm->tm_isdst = -1;
-  datetime->t = mktime(datetime->tm);
-  datetime->string = malloc(DATETIME_LENGTH * sizeof(char));
-  if (datetime->string == NULL)
-    report_memory_problem("when trying to initialize datetime->string");
-  strcpy(datetime->string, "");
+  struct tm tm = {0};
+  tm.tm_year = year - 1900;
+  tm.tm_mon = month - 1;
+  tm.tm_mday = day;
+  tm.tm_hour = hour;
+  tm.tm_min = min;
+  tm.tm_sec = sec;
+  tm.tm_isdst = -1;
+  datetime->t = utils_timegm(&tm);
+  datetime->rfc3339_string = malloc((DATETIME_LENGTH + 1) * sizeof(char));
+  if (datetime->rfc3339_string == NULL)
+    report_memory_problem("when trying to initialize datetime->rfc3339_string");
+  strcpy(datetime->rfc3339_string, "");
 }
 
 struct Datetime datetime_copy(const struct Datetime* datetime) {
   struct Datetime copy;
   copy.t = datetime->t;
-  copy.tm = malloc(sizeof(struct tm));
-  if (copy.tm == NULL)
-    report_memory_problem("when trying to initialize datetime->tm");
-  *copy.tm = *localtime(&copy.t);
-  copy.string = malloc(DATETIME_LENGTH * sizeof(char));
-  if (copy.string == NULL)
-    report_memory_problem("when trying to initialize datetime->string");
-  strcpy(copy.string, "");
+  copy.rfc3339_string = malloc((DATETIME_LENGTH + 1) * sizeof(char));
+  if (copy.rfc3339_string == NULL)
+    report_memory_problem("when trying to initialize copy->rfc3339_string");
+  strcpy(copy.rfc3339_string, "");
   return copy;
 }
 
 void datetime_delete(struct Datetime* datetime) {
-  free(datetime->tm);
-  free(datetime->string);
+  free(datetime->rfc3339_string);
 }
 
 const char* datetime_to_rfc3339_string(const struct Datetime* datetime) {
-  if (strcmp(datetime->string, "") == 0)
-    strftime(datetime->string, DATETIME_LENGTH + 1, "%Y-%m-%dT%H:%M:%S",
-             datetime->tm);
-  return datetime->string;
+  if (strcmp(datetime->rfc3339_string, "") == 0) {
+    struct tm* tm = gmtime(&datetime->t);
+    if (tm == NULL)
+      fprintf(stderr, "error: could not convert timestamp %ld to struct tm\n",
+              datetime->t);
+    strftime(datetime->rfc3339_string, DATETIME_LENGTH + 1,
+             "%Y-%m-%dT%H:%M:%S", tm);
+  }
+  return datetime->rfc3339_string;
 }
 
 void datetime_add_seconds(struct Datetime* datetime, int seconds) {
   datetime->t += seconds;
-  *datetime->tm = *localtime(&datetime->t);
-  strcpy(datetime->string, "");
+  strcpy(datetime->rfc3339_string, "");
 }

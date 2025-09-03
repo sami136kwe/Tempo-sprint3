@@ -1,4 +1,4 @@
-CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
+cflags = -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
 				 -Wsign-conversion -Wformat=2 -Wcast-qual -Wpointer-arith \
          -Wstrict-prototypes -Wlogical-op -Wduplicated-cond \
 				 -Wduplicated-branches -Wnull-dereference -Wjump-misses-init \
@@ -9,17 +9,20 @@ exec = tempo
 
 build: $(exec)
 
-$(exec): $(exec).o datetime.o timeseries.o
-	gcc $(CFLAGS) -o $@ $^
+$(exec): $(exec).o datetime.o timeseries.o utils.o
+	gcc $(cflags) -o $@ $^
 
 $(exec).o: $(exec).c
-	gcc $(CFLAGS) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $<
 
 datetime.o: datetime.c datetime.h
-	gcc $(CFLAGS) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $<
 
 timeseries.o: timeseries.c timeseries.h
-	gcc $(CFLAGS) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $<
+
+utils.o: utils.c utils.h
+	gcc $(cflags) -c -o $@ $<
 
 clean:
 	rm -f $(exec)

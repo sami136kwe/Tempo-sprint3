@@ -15,10 +15,8 @@
 struct Datetime {
   // The 'time_t' representation of the datetime
   time_t t;
-  // The 'struct tm' representation of the datetime
-  struct tm* tm;
-  // The string representation of the datetime
-  char* string;
+  // The RFC3339 string representation of the datetime
+  char* rfc3339_string;
 };
 
 // Functions
