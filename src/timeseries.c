@@ -35,6 +35,27 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
 }
 
 /**
+ * Adds an observation to a timeseries
+ *
+ * @param timeseries  The timeseries to update
+ * @param offset      The offset of the observation
+ * @param value       The value of the observation
+ */
+void timeseries_add_observation(struct Timeseries* timeseries,
+                                int offset,
+                                int value) {
+  size_t i = timeseries->size;
+  while (i > 0 && offset < timeseries->offsets[i - 1]) {
+    timeseries->offsets[i] = timeseries->offsets[i - 1];
+    timeseries->values[i] = timeseries->values[i - 1];
+    --i;
+  }
+  timeseries->offsets[i] = offset;
+  timeseries->values[i] = value;
+  ++timeseries->size;
+}
+
+/**
  * Set the observations of the timeseries from stdin
  *
  * @param timeseries  The timeseries to set
@@ -44,9 +65,7 @@ void timeseries_set_observations_from_stdin(struct Timeseries* timeseries) {
   while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
     int offset, value;
     if (sscanf(line, "%d %d", &offset, &value) == 2) {
-      timeseries->offsets[timeseries->size] = offset;
-      timeseries->values[timeseries->size] = value;
-      ++timeseries->size;
+      timeseries_add_observation(timeseries, offset, value);
     } else {
       fprintf(stderr, "error: could not retrieve values for line %s", line);
       exit(1);
