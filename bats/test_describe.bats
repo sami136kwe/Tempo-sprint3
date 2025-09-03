@@ -29,3 +29,9 @@ setup() {
   assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T10:00:00]"
   assert_line --index 1 "Size: 2"
 }
+
+@test "tempo describe with timeseries with repeated offsets works" {
+  run tempo describe < "$examples_dir/2dbl.ts"
+  assert_line --index 0 "Range: [2025-09-01T09:00:00, 2025-09-01T09:00:00]"
+  assert_line --index 1 "Size: 1"
+}
