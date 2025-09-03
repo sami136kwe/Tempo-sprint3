@@ -117,3 +117,31 @@ setup() {
   run tempo describe < "$examples_dir/2dbl.ts"
   assert_line "Duration: 0"
 }
+
+# Amplitude
+# ---------
+
+@test "tempo describe with empty timeseries displays the amplitude" {
+  run tempo describe < "$examples_dir/empty.ts"
+  assert_line "Amplitude: 0"
+}
+
+@test "tempo describe with timeseries of size 1 displays the amplitude" {
+  run tempo describe < "$examples_dir/1.ts"
+  assert_line "Amplitude: 0"
+}
+
+@test "tempo describe with chronological timeseries of size 2 displays the amplitude" {
+  run tempo describe < "$examples_dir/2.ts"
+  assert_line "Amplitude: 10"
+}
+
+@test "tempo describe with antichronological timeseries of size 2 displays the amplitude" {
+  run tempo describe < "$examples_dir/2rev.ts"
+  assert_line "Amplitude: 10"
+}
+
+@test "tempo describe with timeseries with repeated offsets displays the amplitude" {
+  run tempo describe < "$examples_dir/2dbl.ts"
+  assert_line "Amplitude: 0"
+}

@@ -72,6 +72,16 @@ int timeseries_max_value(const struct Timeseries* timeseries);
 unsigned int timeseries_duration(const struct Timeseries* timeseries);
 
 /**
+ * Returns the amplitude of the timeseries
+ *
+ * Note: If the timeseries is empty, returns 0.
+ *
+ * @param timeseries  The queried timeseries
+ * @return            The amplitude
+ */
+unsigned int timeseries_amplitude(const struct Timeseries* timeseries);
+
+/**
  * Prints the statistics of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print
