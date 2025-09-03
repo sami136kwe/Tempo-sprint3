@@ -27,3 +27,8 @@ setup() {
   assert_line --index 0 "2025-09-01T09:00:00 10"
   assert_line --index 1 "2025-09-01T10:00:00 20"
 }
+
+@test "tempo show with timeseries with repeated offsets works" {
+  run tempo show < "$examples_dir/2dbl.ts"
+  assert_output "2025-09-01T09:00:00 20"
+}

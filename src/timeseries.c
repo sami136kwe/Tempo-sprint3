@@ -1,8 +1,9 @@
 #include "timeseries.h"
 
-#include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "datetime.h"
@@ -35,7 +36,32 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
 }
 
 /**
+ * Returns the index of an offset in a given timeseries
+ *
+ * If the offset does not belong to the timerseries, returns -1.
+ *
+ * @param timeseries  The timeseries to update
+ * @param offset      The searched offset
+ * @return            The index of the offset or -1
+ */
+int timeseries_offset_index(const struct Timeseries* timeseries,
+                            int offset) {
+  size_t i = 0;
+  while (i < timeseries->size) {
+    if (offset == timeseries->offsets[i])
+      return (int)i;
+    else if (offset < timeseries->offsets[i])
+      return -1;
+    ++i;
+  }
+  return -1;
+}
+
+/**
  * Adds an observation to a timeseries
+ *
+ * If the timeseries already has an observation with the same offset, the
+ * associated values is overwritten.
  *
  * @param timeseries  The timeseries to update
  * @param offset      The offset of the observation
@@ -44,15 +70,21 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
 void timeseries_add_observation(struct Timeseries* timeseries,
                                 int offset,
                                 int value) {
-  size_t i = timeseries->size;
-  while (i > 0 && offset < timeseries->offsets[i - 1]) {
-    timeseries->offsets[i] = timeseries->offsets[i - 1];
-    timeseries->values[i] = timeseries->values[i - 1];
-    --i;
+  int idx = timeseries_offset_index(timeseries, offset);
+  size_t i;
+  if (idx == -1) {
+    i = timeseries->size;
+    while (i > 0 && offset < timeseries->offsets[i - 1]) {
+      timeseries->offsets[i] = timeseries->offsets[i - 1];
+      timeseries->values[i] = timeseries->values[i - 1];
+      --i;
+    }
+    ++timeseries->size;
+  } else {
+    i = (size_t)idx;
   }
   timeseries->offsets[i] = offset;
   timeseries->values[i] = value;
-  ++timeseries->size;
 }
 
 /**
