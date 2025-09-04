@@ -83,8 +83,9 @@ contraintes suivantes:
 
 1. La première ligne du texte doit contenir une horodate valide respectant le
    format `AAAA-mm-JJTHH:MM:SS`
-2. Toutes les autres lignes doivent correspondre à l'expression régulière
-   étendue `^OFFSET[:blank:]*VALUE[:blank:]*$`,
+2. Chacune des autres lignes doit contenir une observation, c'est-à-dire
+   qu'elle doit correspondre à l'expression régulière étendue
+   `^OFFSET[:blank:]*VALUE[:blank:]*$`,
    où
     * `OFFSET` est un entier non négatif
     * `VALUE` est un entier
@@ -96,17 +97,15 @@ contraintes suivantes:
 Des exemples de séries temporelles valides (extension `.ts`) et invalides
 (extension `.invalid`) sont donnés dans le répertoire [`examples`](examples).
 
-<!---
 ## Sous-commandes
 
-L'application `kover` utilise des *sous-commandes* afin de préciser
-l'information qu'on souhaite afficher à propos d'une scène. Pour ce premier
-travail pratique, vous devez supporter les 4 sous-commandes suivantes:
+L'application `tempo` utilise des *sous-commandes* afin de préciser
+l'information qu'on souhaite afficher à propos d'une série temporelle. Pour ce
+premier travail pratique, vous devez supporter les 3 sous-commandes suivantes:
 
-1. `kover bounding-box`
-2. `kover describe`
-3. `kover help`
-4. `kover summarize`
+1. `kover describe`
+2. `kover help`
+3. `kover show`
 
 ## La sous-commande `help`
 
@@ -114,81 +113,63 @@ Lorsque vous lancez le programme avec la sous-commande `help`, un manuel
 d'utilisation doit être affiché sur la sortie standard:
 
 ```text
-$ bin/kover help
-Usage: kover SUBCOMMAND
-Handles positioning of communication antennas by reading a scene on stdin.
+Usage: tempo SUBCOMMAND
+Displays information about a timeseries.
 
 SUBCOMMAND is mandatory and must take one of the following values:
-  bounding-box: returns a bounding box of the loaded scene
-  describe: describes the loaded scene in details
+  describe: describes the timeseries
   help: shows this message
-  summarize: summarizes the loaded scene
-
-A scene is a text stream that must satisfy the following syntax:
-
-  1. The first line must be exactly 'begin scene'
-  2. The last line must be exactly 'end scene'
-  3. Any line between the first and last line must either be a building line
-     or an antenna line
-  4. A building line has the form 'building ID X Y W H' (with any number of
-     blank characters before or after), where
-       ID is the building identifier
-       X is the x-coordinate of the building
-       Y is the y-coordinate of the building
-       W is the half-width of the building
-       H is the half-height of the building
-  5. An antenna line has the form 'antenna ID X Y R' (with any number of
-     blank characters before or after), where
-       ID is the building identifier
-       X is the x-coordinate of the antenna
-       Y is the y-coordinate of the antenna
-       R is the radius scope of the antenna
+  show: list the observations of the timeseries
 ```
 
-## La sous-commande `summarize`
+## La sous-commande `show`
 
-La sous-commande `summarize` doit afficher un résumé des éléments qui composent
-la scène, c'est-à-dire le nombre de buildings et le nombre d'antennes. Par
-exemple, si on reprend la scène illustrée plus haut (voir fichier
-[`examples/3b2a.scene`](examples/3b2a.scene)), alors on obtient ceci:
+La sous-commande `show` doit afficher la série temporelle sur la sortie
+standard dans un format différent de celui considéré lors de la lecture. Plus
+précisément, il doit afficher en ordre chronologique chacune des observations,
+en commençant par l'horodate de l'observation, suivie par la valeur observée,
+en utilisant une espace comme séparateur.
+
+Par exemple, si on reprend la série temporelle illustrée plus haut (voir fichier
+[`examples/6.ts`](examples/6.ts)), alors on obtient ceci:
 
 ```
-$ bin/kover summarize < examples/3b2a.scene
-A scene with 3 buildings and 2 antennas
+$ bin/tempo show < examples/6.ts
+2025-09-01T00:00:00 10
+2025-09-01T08:00:00 40
+2025-09-01T16:00:00 15
+2025-09-02T00:00:00 35
+2025-09-02T08:00:00 50
+2025-09-03T00:00:00 25
 ```
 
-La commande affiche en premier le nombre de buildings et ensuite le nombre
-d'antennes. Elle doit mettre les noms au pluriel quand il y en a plusieurs. De
-plus, elle ne doit afficher que les objets qui apparaissent au moins une fois.
+Ainsi, la commande affiche les 6 observations contenues dans la série
+temporelle, en ordre chronologique, en utilisation l'espace comme séparateur. Chaque observation est donnée par une paire d'horodate et de valeur entière.
 
 ## La sous-commande `describe`
 
-La sous-commande `describe` doit afficher, en plus du résumé, le détail des
-éléments qui composent la scène. Toujours en prenant l'exemple ci-haut:
+La sous-commande `describe` affiche différentes informations à propos de la
+série temporelle:
+
+* Son *domaine*: le plus petit intervalle temporel recouvrant toutes les
+  horodates des observations
+* Son *codomaine*: le plus petit intervalle de valeurs recouvrant toutes les
+  valeurs des observations
+* Sa *taille*: le nombre d'observations qu'elle contient
+* Sa *durée*: l'écart (en secondes) entre l'horodate de la dernière observation
+  et l'horodate de la première observation
+* Son *amplitude*: l'écart entre la plus grande valeur observée et la plus
+  petite valeur observée
+
+Toujours avec l'exemple précédent:
 
 ```
-$ bin/kover describe < examples/3b2a.scene
-A scene with 3 buildings and 2 antennas
-  building b1 at 0 0 with dimensions 1 1
-  building b2 at 7 8 with dimensions 2 3
-  building b3 at 15 1 with dimensions 4 1
-  antenna a1 at 5 4 with range 6
-  antenna a2 at 16 3 with range 4
-```
-
-Les buildings doivent être affichés en premier, suivis des antennes, avec une
-indentation de 2 espaces. Les buildings et les antennes doivent apparaître en
-suivant l'ordre lexicographique des identifiants.
-
-## La sous-commande `bounding-box`
-
-Finalement, la sous-commande `bounding-box` doit afficher les dimensions du
-plus petit rectangle qui contient tous les éléments de la scène, incluant la
-portée des antennes.
-
-```
-$ bin/kover bounding-box < examples/3b2a.scene
-bounding box [-1, 20] x [-2, 11]
+$ bin/tempo describe < examples/6.ts
+Domain: [2025-09-01T00:00:00, 2025-09-03T00:00:00]
+Codomain: [10, 50]
+Size: 6
+Duration: 172800
+Amplitude: 40
 ```
 
 ## Validation
@@ -198,6 +179,8 @@ lorsqu'il s'exécute de façon normale (sans erreur), alors le code `0` doit êt
 retourné. En cas d'erreur, vous devez retourner le code `1`. Lorsqu'une erreur
 survient, un message expliquant l'erreur doit être affiché sur le canal
 d'erreur (`stderr`).
+
+<!---
 
 1. Si on oublie de fournir une sous-commande, le message suivant doit être
    affiché:
