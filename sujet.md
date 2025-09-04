@@ -61,81 +61,42 @@ Le flux de texte suivant décrit une série temporelle de six observations:
 172800 25
 ```
 
+Plus spécifiquement:
+
+* La première ligne du flux (`2025-09-01T00:00:00`) indique l'horodate de
+  référence de la série temporelle au format `AAAA-mm-JJTHH:MM:SS`
+* Les lignes suivantes du flux de texte contiennent les observations, une
+  observation par ligne
+* Une observation est une ligne contenant deux valeurs, séparées par une espace
+* La première valeur d'une observation est un entier positif ou nul
+  correspondant au décalage (en secondes) du moment où l'observation est
+  effectuée par rapport à l'horodate de référence
+* La seconde valeur d'une observation est un entier correspondant à la valeur
+  observée
+
 Une représentation graphique de la série temporelle est disponible dans le
 fichier PNG suivant:
-![Une scène de 3 buildings et 2 antennes](doc/timeseries.png)
+![Une série temporelle de 6 observations](doc/timeseries.png)
+
+Plus généralement, pour être valide, un flux de texte doit respecter les
+contraintes suivantes:
+
+1. La première ligne du texte doit contenir une horodate valide respectant le
+   format `AAAA-mm-JJTHH:MM:SS`
+2. Toutes les autres lignes doivent correspondre à l'expression régulière
+   étendue `^OFFSET[:blank:]*VALUE[:blank:]*$`,
+   où
+    * `OFFSET` est un entier non négatif
+    * `VALUE` est un entier
+3. Un *entier* est une chaîne de caractères qui a une correspondance complète
+   avec l'ERE `0|([-]?[1-9][0-9]*)`;
+4. Un *entier non négatif* est une chaîne de caractères qui a une
+   correspondance complète avec l'ERE `0|([1-9][0-9]*)`;
+
+Des exemples de séries temporelles valides (extension `.ts`) et invalides
+(extension `.invalid`) sont donnés dans le répertoire [`examples`](examples).
 
 <!---
-Plus formellement, un *building* est représenté par les éléments suivants:
-
-* `id`: un *identifiant* unique, sous forme de chaîne de caractères;
-* `x` et `y`: une *position* $`(x,y)`$ dans le plan, sous forme de deux entiers
-  (négatifs, nuls ou positifs);
-* `w` et `h`: une *demi-largeur* et une *demi-hauteur* $`(w, h)`$, qui sont
-  des entiers strictement positifs.
-
-Ainsi, les 4 points du rectangle déterminé par un building sont $`(x - w,
-y - h)`$, $`(x + w, y - h)`$, $`(x - w, y + h)`$ et $`(x + w, y + h)`$.
-
-Une *antenne* est représentée par les éléments suivants:
-
-* `id`: un *identifiant* unique, sous forme de chaîne de caractères;
-* `x` et `y`: une *position* $`(x,y)`$ dans le plan, sous forme de deux entiers
-  (négatifs, nuls ou positifs);
-* `r`: un rayon (ou une *portée*) $`r`$, qui est un entier strictement
-  positif.
-
-Ainsi, un *building* ne peut pas avoir une aire nulle et une antenne a toujours
-une portée décrivant un disque d'aire strictement positive. Finalement, une
-*scène* est représentée par les éléments suivants:
-
-* `buildings`: une collection de buildings qui ne se chevauchent pas,
-  c'est-à-dire qu'une scène ne peut contenir deux buildings dont l'intersection
-  occupe une aire non nulle.
-* `antennas`: une collection d'antennes qui occupent des positions distinctes.
-
-Pour décrire une scène à l'aide d'un flux de texte, on convient d'utiliser une
-syntaxe spécifique:
-
-1. La première ligne du texte doit correspondre à l'expression régulière
-   étendue (ERE) `^begin scene$`;
-2. La dernière ligne du texte doit correspondre à l'ERE `^end scene$`;
-3. Chaque ligne entre la première ligne et la dernière ligne doit être une
-   ligne de type *building* ou une ligne de type *antenne*;
-4. Une ligne de type *building* doit correspondre à l'ERE
-   `^[:blank:]*building ID X Y W H[:blank:]*$`,
-   où
-    * `ID` est l'identifiant du building,
-    * (`X`, `Y`) est la position du building, `X` et `Y` étant des nombres
-      entiers et
-    * (`W`, `H`) est une paire de demi-largeur et demi-hauteur, `W` et `H`
-      étant des nombres entiers strictement positifs;
-5. Une ligne décrivant une antenne correspondre à l'ERE
-   `^[:blank:]*antenna ID X Y R[:blank:]*$`,
-   où
-    * `ID` est l'identifiant de l'antenne,
-    * (`X`, `Y`) est la position de l'antenne, où `X` et `Y` sont des nombres
-      entiers et
-    * `R` est la portée de l'antenne, qui est un nombre entier strictement
-      positif.
-
-Votre programme doit reconnaître les identifiants et les nombres entiers selon
-les contraintes suivantes:
-
-* Un *identifiant* est une chaîne de caractères qui a une correspondance
-  complète avec l'ERE `[a-zA-Z_][a-zA-Z0-9_]*`;
-* Un *entier* est une chaîne de caractères qui a une correspondance complète
-  avec l'ERE `0|([-]?[1-9][0-9]*)`;
-* Un *entier strictement positif* est une chaîne de caractères qui a une
-  correspondance complète avec l'ERE `[1-9][0-9]*`;
-
-Des exemples de scènes valides et invalides sont donnés dans le répertoire
-[`examples`](examples).
-
-L'application `kover` permet donc de manipuler des scènes et vise à optimiser
-le positionnement d'antennes dans ces scènes afin de couvrir adéquatement les
-buildings qui occupent cette scène.
-
 ## Sous-commandes
 
 L'application `kover` utilise des *sous-commandes* afin de préciser
