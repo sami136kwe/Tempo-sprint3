@@ -49,21 +49,23 @@ vérifié par des tests fonctionnels. Vous devrez donc vous assurer de ne pas
 écrire de messages superflus sur `stdout` ou `stderr` et de bien écrire **tels
 quels** les messages d'erreurs.
 
-<!---
-Le flux de texte suivant décrit une série temporelle de trois observations:
+Le flux de texte suivant décrit une série temporelle de six observations:
 
 ```
-2025-09-01T09:00:00
+2025-09-01T00:00:00
 0 10
-60 20
-3600 30
+28800 40
+57600 15
+86400 35
+115200 50
+172800 25
 ```
-
 
 Une représentation graphique de la série temporelle est disponible dans le
-fichier SVG suivant:
-![Une scène de 3 buildings et 2 antennes](doc/scene.svg)
+fichier PNG suivant:
+![Une scène de 3 buildings et 2 antennes](doc/timeseries.png)
 
+<!---
 Plus formellement, un *building* est représenté par les éléments suivants:
 
 * `id`: un *identifiant* unique, sous forme de chaîne de caractères;
