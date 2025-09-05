@@ -30,9 +30,9 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
   if (sscanf(line, "%4d-%2d-%2dT%2d:%2d:%2d", &y, &m, &d, &h, &min, &s) == 6)
     datetime_initialize(&timeseries->start_datetime, y, m, d, h, min, s);
   else {
-    fprintf(stderr, "error: could not retrieve start datetime in line %s",
-            line);
-    exit(1);
+    fprintf(stderr,
+            "error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)");
+    exit(2);
   }
 }
 
