@@ -103,9 +103,9 @@ L'application `tempo` utilise des *sous-commandes* afin de préciser
 l'information qu'on souhaite afficher à propos d'une série temporelle. Pour ce
 premier travail pratique, vous devez supporter les 3 sous-commandes suivantes:
 
-1. `kover describe`
-2. `kover help`
-3. `kover show`
+1. `tempo describe`
+2. `tempo help`
+3. `tempo show`
 
 ## La sous-commande `help`
 
