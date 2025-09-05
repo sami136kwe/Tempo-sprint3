@@ -63,7 +63,7 @@ setup() {
 @test "tempo show with wrong value format returns an error" {
   run tempo show < "$examples_dir/wrong_value.invalid"
   [ "$status" -eq 2 ]
-  assert_output "error: invalid observation format (0 10km)"
+  assert_output "error: invalid observation format (0 10.2)"
 }
 
 @test "tempo show with negative offset format returns an error" {
