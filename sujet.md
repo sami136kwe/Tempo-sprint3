@@ -125,6 +125,23 @@ SUBCOMMAND is mandatory and must take one of the following values:
   describe: describes the timeseries
   help: shows this message
   show: list the observations of the timeseries
+
+A timeseries is a text stream that must satisfy the following syntax:
+
+  1. The first line must contain a valid reference datetime with format
+       YYYY-mm-DDTHH:MM:SS
+     where YYYY are the 4 digits for the year,
+           mm are the 2 digits for the month,
+           DD are the 2 digits for the day,
+           HH are the 2 digits for the hour,
+           MM are the 2 digits for the minutes and
+           SS are the 2 digits for the seconds
+  2. Each of the remaining line must contain an observation, given with the
+     format
+       OFFSET VALUE
+     where OFFSET is a positive integer indicating the number of seconds offset
+                  with respect to the reference datetime and
+           VALUE is an integer
 ```
 
 ## La sous-commande `show`

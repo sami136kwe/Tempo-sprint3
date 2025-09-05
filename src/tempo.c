@@ -13,7 +13,24 @@ Displays information about a timeseries.\n\
 SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
   help: shows this message\n\
-  show: list the observations of the timeseries\n"
+  show: list the observations of the timeseries\n\
+\n\
+A timeseries is a text stream that must satisfy the following syntax:\n\
+\n\
+  1. The first line must contain a valid reference datetime with format\n\
+       YYYY-mm-DDTHH:MM:SS\n\
+     where YYYY are the 4 digits for the year,\n\
+           mm are the 2 digits for the month,\n\
+           DD are the 2 digits for the day,\n\
+           HH are the 2 digits for the hour,\n\
+           MM are the 2 digits for the minutes and\n\
+           SS are the 2 digits for the seconds\n\
+  2. Each of the remaining line must contain an observation, given with the\n\
+     format\n\
+       OFFSET VALUE\n\
+     where OFFSET is a positive integer indicating the number of seconds offset\n\
+                  with respect to the reference datetime and\n\
+           VALUE is an integer\n"
 
 // Help functions
 // --------------
