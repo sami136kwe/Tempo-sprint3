@@ -1,0 +1,23 @@
+#!/usr/bin/gnuplot
+
+# Data
+$data << EOD
+2025-09-01T00:00:00 10
+2025-09-01T08:00:00 40
+2025-09-01T16:00:00 15
+2025-09-02T00:00:00 35
+2025-09-02T08:00:00 50
+2025-09-02T16:00:00 25
+EOD
+
+# General settings
+set terminal png
+set xlabel "Time" offset 0,-1
+set xdata time
+set timefmt "%Y-%m-%dT%H:%M:%S"
+set ylabel "Value"
+set nokey 
+set output "timeseries.png"
+
+# Plot times
+plot $data using 1:2 ps 2.0 pt 7 lc "orange" title "0.9" with points

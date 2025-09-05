@@ -1,0 +1,2 @@
+timeseries.png:
+	./plot-timeseries
