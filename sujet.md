@@ -286,6 +286,10 @@ Il n'est pas permis d'utiliser l'allocation dynamique pour ce travail. Par
 conséquent, vous pouvez faire certaines hypothèses qui réduisent le nombre de
 cas d'erreur potentielle à gérer. Plus précisément, vous pouvez supposer que:
 
+* Vous n'avez pas à gérer les fuseaux horaires, les changements d'heure et les
+  secondes intercalaires. Autrement dit, vous pouvez faire comme s'il
+  n'existait qu'un seul fuseau horaire, qu'on ne changeait jamais l'heure et
+  qu'il n'existait pas de secondes intercalaires.
 * Chaque ligne décrivant une série temporelle est de longueur au plus 100
 * Toutes les horodates manipulées sont postérieures au 1er janvier 1900 et
   antérieures au ???
