@@ -39,7 +39,7 @@ numériques représentant l'évolution d'une quantité spécifique au cours du t
 Afin d'utiliser un vocabulaire uniforme, nous appellerons *horodate* un instant
 donné (en anglais, *timestamp*) et *valeur* la quantité associée à cet instant.
 Une paire $`(t, v)`$, où $`t`$ est une horodate et $`v`$ une valeur, sera
-appelé une *observation*. Une *série temporelle* peut donc être vu comme un
+appelé une *observation*. Une *série temporelle* peut donc être vue comme un
 ensemble d'observations.
 
 Votre programme devra lire une série temporelle $`T`$ sur l'entrée standard
@@ -49,7 +49,8 @@ vérifié par des tests fonctionnels. Vous devrez donc vous assurer de ne pas
 écrire de messages superflus sur `stdout` ou `stderr` et de bien écrire **tels
 quels** les messages d'erreurs.
 
-Le flux de texte suivant décrit une série temporelle de six observations:
+Considérons le flux de texte suivant, qui décrit une série temporelle de six
+observations:
 
 ```
 2025-09-01T00:00:00
@@ -64,7 +65,10 @@ Le flux de texte suivant décrit une série temporelle de six observations:
 Plus spécifiquement:
 
 * La première ligne du flux (`2025-09-01T00:00:00`) indique l'horodate de
-  référence de la série temporelle au format `AAAA-mm-JJTHH:MM:SS`
+  référence de la série temporelle au format `AAAA-mm-JJTHH:MM:SS`. Ce format
+  est notamment reconnu par les standards
+  [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) et
+  [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339)
 * Les lignes suivantes du flux de texte contiennent les observations, une
   observation par ligne
 * Une observation est une ligne contenant deux valeurs, séparées par une espace
@@ -84,8 +88,9 @@ contraintes suivantes:
 1. La première ligne du texte doit contenir une horodate valide respectant le
    format `AAAA-mm-JJTHH:MM:SS`
 2. Chacune des autres lignes doit contenir une observation, c'est-à-dire
-   qu'elle doit correspondre à l'expression régulière étendue
-   `^OFFSET[:blank:]*VALUE[:blank:]*$`,
+   qu'elle doit avoir une correspondance complète avec l'expression régulière
+   étendue (ERE)
+   `OFFSET[:blank:]*VALUE[:blank:]*`,
    où
     * `OFFSET` est un entier non négatif
     * `VALUE` est un entier
@@ -144,7 +149,8 @@ $ bin/tempo show < examples/6.ts
 ```
 
 Ainsi, la commande affiche les 6 observations contenues dans la série
-temporelle, en ordre chronologique, en utilisation l'espace comme séparateur. Chaque observation est donnée par une paire d'horodate et de valeur entière.
+temporelle, en ordre chronologique, en utilisant l'espace comme séparateur.
+Chaque observation est donnée par une paire d'horodate et de valeur entière.
 
 ## La sous-commande `describe`
 
@@ -208,8 +214,8 @@ sur le canal d'erreur (`stderr`).
     error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)
     ```
 
-4. Si le format de l'horodate `HORODATE` est valide, mais que l'horodate
-   elle-même est invalide, on retourne `2` ainsi que le message suivant
+4. Si le format de l'horodate est valide, mais que l'horodate elle-même est
+   invalide, on retourne `2` ainsi que le message suivant
 
     ```
     error: invalid datetime (HORODATE)
@@ -217,8 +223,8 @@ sur le canal d'erreur (`stderr`).
 
    où `HORODATE` est l'horodate apparaissant dans le flux de texte.
 
-5. Si le format d'une observation `OBSERVATION` fournie dans le flux de texte
-   est invalide, on retourne `2` et on affiche le message:
+5. Si le format d'une observation fournie dans le flux de texte est invalide,
+   on retourne `2` et on affiche le message:
 
     ```
     error: invalid observation format (OBSERVATION)
@@ -226,9 +232,8 @@ sur le canal d'erreur (`stderr`).
 
    où `OBSERVATION` est la ligne de l'observation invalide.
 
-6. Finalement, si le décalage (*offset*) d'une observation `OBSERVATION`
-   fournie dans le flux de texte est négatif, on retourne aussi `2` et on
-   affiche:
+6. Finalement, si le décalage (*offset*) d'une observation fournie dans le flux
+   de texte est négatif, on retourne aussi `2` et on affiche:
 
     ```
     error: invalid offset (OBSERVATION)
@@ -236,24 +241,27 @@ sur le canal d'erreur (`stderr`).
 
    où `OBSERVATION` est la ligne de l'observation invalide.
 
-Chacun des cas possibles d'erreur est couvert dans les tests fonctionnels
-disponibles dans les fichiers `test*.bats` du répertoire [`bats`](bats). En cas
-de doute sur le comportement à adopter dans certaines situations, n'hésitez pas
+Les tests fonctionnels disponibles dans les fichiers `test*.bats` du répertoire
+[`bats`](bats) montrent des exemples pour chacune des 6 situations. En cas de
+doute sur le comportement à adopter dans certaines situations, n'hésitez pas
 à poser des questions pour avoir des précisions.
 
 ## Hypothèses simplificatrices
 
-Il n'est pas permis d'utiliser l'allocation dynamique pour ce travail. Par
-conséquent, vous pouvez faire certaines hypothèses qui réduisent le nombre de
-cas d'erreur potentielle à gérer. Plus précisément, vous pouvez supposer que:
+Vous pouvez faire certaines hypothèses qui réduisent le nombre de cas d'erreur
+potentielle à gérer. Plus précisément, vous pouvez supposer, sans le valider,
+que:
 
-* Vous n'avez pas à gérer les fuseaux horaires, les changements d'heure et les
-  secondes intercalaires. Autrement dit, vous pouvez faire comme s'il
-  n'existait qu'un seul fuseau horaire, qu'on ne changeait jamais l'heure et
-  qu'il n'existait pas de secondes intercalaires.
 * Chaque ligne décrivant une série temporelle est de longueur au plus 100
-* Toutes les horodates manipulées sont postérieures au 1er janvier 1900 et
-  antérieures au ???
+* Le nombre d'observations d'une série temporelle est d'au plus 1000
+* Toutes les horodates manipulées sont dans l'intervalle [1902-01-01T00:00:00,
+  2037-12-31T23:59:59] (donc pas de problème de représentation d'une horodate
+  à l'aide du type `time_t`)
+
+Aussi, vous n'avez pas à gérer les fuseaux horaires, les changements d'heure et
+les secondes intercalaires. Autrement dit, vous pouvez faire comme s'il
+n'existait qu'un seul fuseau horaire, qu'on ne changeait jamais l'heure et
+qu'il n'existait pas de secondes intercalaires.
 
 ## Tâches à accomplir
 
@@ -425,41 +433,42 @@ Plus précisément, les éléments suivants seront pris en compte:
 - **Qualité du code (20 points)**: Les identifiants utilisés sont significatifs
   et ont une syntaxe uniforme, le code est bien indenté, il y a de l'aération
   autour des opérateurs et des parenthèses, le programme est simple et lisible.
-  Pas de bout de code en commentaire ou de commentaires inutiles. Pas de valeur
-  magique répétées. Le code doit être bien factorisé (pas de redondance). Il
-  est décomposé en petites fonctions qui effectuent des tâches spécifiques. La
-  présentation est soignée. *Note*: si votre style est impeccable mais que
-  votre travail est peu avancé, vous aurez peu de points pour cette partie.
+  Pas de bout de code en commentaire, de commentaires inutiles ou de
+  commentaires paraphrasant le code. Pas de valeur magique répétées. Le code
+  doit être bien factorisé (pas de redondance). Il est décomposé en petites
+  fonctions qui effectuent des tâches spécifiques. *Note*: si votre style est
+  impeccable mais que votre travail est peu avancé, vous aurez peu de points
+  pour cette partie.
 
 - **Documentation (20 points)**: Le fichier `README.md` contient toute
   l'information demandée et utilise adéquatement le format Markdown. Toutes les
   fonctions sans exception ont une *docstring* qui suit le format suggéré en
-  classe.
+  classe. La rédaction est soignée et contient peu ou pas de fautes
+  (typographiques, d'orthographe et de grammaire).
 
 - **Utilisation de Git (10 points)**: Les modifications sont réparties en
-  *commits* atomiques. Le fichier `.gitignore` est complet. Les messages de
-  *commit* sont significatifs, uniformes et suivent la convention suggérée.
+  *commits* atomiques. Seuls les fichiers pertinents sont versionnés et le
+  fichier `.gitignore` est complet. Les messages de *commit* sont
+  significatifs, uniformes et suivent la convention suggérée plus haut.
 
 ### Pénalités
 
-Si votre programme ne compile pas, une pénalité pouvant aller jusqu'à **100%**
-pourra être appliquée. Si votre programme génère des avertissements à la
-compilation, une pénalité pouvant aller jusqu'à **20%** pourra être appliquée.
+Des pénalités (jusqu'à hauteur de **100%**) pourront être appliquées si les
+contraintes suivantes ne sont pas respectées:
 
-En outre, si vous ne respectez pas les critères suivants, une pénalité
-pouvant aller jusqu'à **30%** pourra être appliquée:
-
-- Votre code permanent doit être indiqué dans le fichier `README.md`
-- Votre dépôt doit se nommer **exactement** `inf3135-253-tp1`
-- L'URL de votre dépôt doit être **exactement**
+* Votre programme doit compiler sans erreur et sans avertissement lorsqu'on
+  lance la commande `make`
+* Votre code permanent doit être indiqué dans le fichier `README.md`
+* Votre dépôt doit être un *fork* du [gabarit
+  fourni](https://gitlab.info.uqam.ca/inf31351/20253/inf3135-253-tp1).
+* Votre dépôt doit être **privé**.
+* Votre dépôt doit se nommer **exactement** `inf3135-253-tp1`
+* L'URL de votre dépôt doit être **exactement**
   `https://gitlab.info.uqam.ca/<utilisateur>/inf3135-253-tp1` où
   `<utilisateur>` doit être remplacé par votre identifiant
-- Les utilisateurs `blondin_al` et `guite-vinet.julien` doivent avoir accès
+* Les utilisateurs `blondin_al` et `guite-vinet.julien` doivent avoir accès
   à votre projet en mode *Maintainer*.
-- Votre dépôt doit être un *fork* du [gabarit
-  fourni](https://gitlab.info.uqam.ca/inf31351/20253/inf3135-253-tp1).
-- Votre dépôt doit être **privé**.
-- Il est interdit d'utiliser l'**allocation dynamique** dans ce travail
+* Il est interdit d'utiliser l'**allocation dynamique** dans ce travail
   (fonctions `malloc`, `calloc`, `realloc`, `free`).
 
 ## Remise
