@@ -44,3 +44,30 @@ setup() {
   [ "$status" -eq 2 ]
   assert_output "error: invalid datetime (5002-06-04T00:00:00)"
 }
+
+# Wrong observation
+# -----------------
+
+@test "tempo show with wrong character in observation returns an error" {
+  run tempo show < "$examples_dir/wrong_char_observation.invalid"
+  [ "$status" -eq 2 ]
+  assert_output "error: invalid observation format (0:10)"
+}
+
+@test "tempo show with wrong offset format returns an error" {
+  run tempo show < "$examples_dir/wrong_offset.invalid"
+  [ "$status" -eq 2 ]
+  assert_output "error: invalid observation format (0m 10)"
+}
+
+@test "tempo show with wrong value format returns an error" {
+  run tempo show < "$examples_dir/wrong_value.invalid"
+  [ "$status" -eq 2 ]
+  assert_output "error: invalid observation format (0 10km)"
+}
+
+@test "tempo show with negative offset format returns an error" {
+  run tempo show < "$examples_dir/negative_offset.invalid"
+  [ "$status" -eq 2 ]
+  assert_output "error: invalid offset (-30 10)"
+}
