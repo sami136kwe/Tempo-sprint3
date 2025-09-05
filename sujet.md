@@ -278,22 +278,17 @@ considérées. Toutes ces erreurs sont couvertes dans les tests fonctionnels
 disponibles dans les fichiers `test*.bats` du répertoire [`bats`](bats). En cas
 de doute sur le comportement à adopter dans certaines situations, n'hésitez pas
 à poser des questions pour avoir des précisions.
+-->
 
 ## Hypothèses simplificatrices
 
-Comme il n'est pas permis d'utiliser l'allocation dynamique pour ce travail,
-vous pouvez faire certaines hypothèses qui réduisent le nombre de cas d'erreur
-potentielle. Ces aspects seront gérés dans le prochain travail pratique. Plus
-précisément, vous pouvez supposer que:
+Il n'est pas permis d'utiliser l'allocation dynamique pour ce travail. Par
+conséquent, vous pouvez faire certaines hypothèses qui réduisent le nombre de
+cas d'erreur potentielle à gérer. Plus précisément, vous pouvez supposer que:
 
-* Chaque ligne d'une scène est de longueur au plus 50
-* Un identifiant de building ou d'antenne est de longueur au plus 10
-* Le nombre maximum de buildings dans une scène est 100
-* Le nombre maximum d'antennes dans une scène est 100
-* Le nombre maximum d'arguments d'une ligne de scène est 6 (par exemple,
-  `building b1 0 0 1 1` a exactement 6 arguments, séparés par des espaces)
-* La longueur maximum d'un argument dans une ligne de scène est 10
---->
+* Chaque ligne décrivant une série temporelle est de longueur au plus 100
+* Toutes les horodates manipulées sont postérieures au 1er janvier 1900 et
+  antérieures au ???
 
 ## Tâches à accomplir
 
