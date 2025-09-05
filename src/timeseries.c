@@ -30,9 +30,9 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
   if (sscanf(line, "%4d-%2d-%2dT%2d:%2d:%2d", &y, &m, &d, &h, &min, &s) == 6)
     datetime_initialize(&timeseries->start_datetime, y, m, d, h, min, s);
   else {
-    fprintf(stderr, "error: could not retrieve start datetime in line %s",
-            line);
-    exit(1);
+    fprintf(stderr,
+            "error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)");
+    exit(2);
   }
 }
 
@@ -96,12 +96,18 @@ void timeseries_add_observation(struct Timeseries* timeseries,
 void timeseries_set_observations_from_stdin(struct Timeseries* timeseries) {
   char line[LINE_MAX_LENGTH];
   while (fgets(line, LINE_MAX_LENGTH, stdin) != NULL) {
+    line[strcspn(line, "\n")] = '\0';
     int offset, value;
-    if (sscanf(line, "%d %d", &offset, &value) == 2) {
-      timeseries_add_observation(timeseries, offset, value);
+    char trailing;
+    int num_fields = sscanf(line, "%d %d%c", &offset, &value, &trailing);
+    if (num_fields != 2) {
+      fprintf(stderr, "error: invalid observation format (%s)", line);
+      exit(2);
+    } else if (offset < 0) {
+      fprintf(stderr, "error: invalid offset (%s)", line);
+      exit(2);
     } else {
-      fprintf(stderr, "error: could not retrieve values for line %s", line);
-      exit(1);
+      timeseries_add_observation(timeseries, offset, value);
     }
   }
 }
