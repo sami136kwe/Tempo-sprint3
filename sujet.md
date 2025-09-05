@@ -174,111 +174,72 @@ Amplitude: 40
 
 ## Validation
 
-Votre programme doit détecter les erreurs d'utilisation. En particulier,
-lorsqu'il s'exécute de façon normale (sans erreur), alors le code `0` doit être
-retourné. En cas d'erreur, vous devez retourner le code `1`. Lorsqu'une erreur
-survient, un message expliquant l'erreur doit être affiché sur le canal
-d'erreur (`stderr`).
+Votre programme doit détecter les erreurs d'utilisation.
 
-<!---
+* Lorsqu'il s'exécute de façon normale (sans erreur), alors le code `0` doit
+  être retourné.
+* En cas d'erreur d'utilisation du programme, vous devez retourner le code `1`.
+* En cas d'erreur dans les données fournies en entrées, vous devez retourner le
+  code `2`.
 
-1. Si on oublie de fournir une sous-commande, le message suivant doit être
-   affiché:
+Lorsqu'une erreur survient, un message expliquant l'erreur doit être affiché
+sur le canal d'erreur (`stderr`).
+
+1. Si on oublie de fournir une sous-commande, la valeur `1` doit être retournée
+   et le message suivant doit être affiché sur `stderr`:
 
     ```
     error: subcommand is mandatory
     ```
 
-2. Si on fournit une sous-commande non reconnue, le message suivant doit être
-   affiché:
+2. Si on fournit une sous-commande `SUBCOMMAND` non reconnue, la valeur `1`
+   doit être retournée et le message doit plutôt être:
 
     ```
-    error: subcommand 'SUBCOMMAND' is not recognized
+    error: unrecognized subcommand 'SUBCOMMAND'
     ```
 
    où `SUBCOMMAND` est la sous-commande non reconnue fournie
 
-3. Si la première ligne du flux de texte décrivant la scène n'est pas correcte:
+3. Si l'horodate fournie dans le flux de texte a un format invalide, c'est la
+   valeur `2` qui doit être retournée, ainsi que le message:
 
     ```
-    error: first line must be exactly 'begin scene'
+    error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)
     ```
 
-4. Si une des lignes entre `begin scene` et `end scene` n'est pas de type
-   `building` ou `antenna`:
+4. Si le format de l'horodate `HORODATE` est valide, mais que l'horodate
+   elle-même est invalide, on retourne `2` ainsi que le message suivant
 
     ```
-    error: unrecognized line (line #N)
+    error: invalid datetime (HORODATE)
     ```
 
-   où `N` est le numéro de la ligne problématique (on commence la numérotation des lignes à 1)
+   où `HORODATE` est l'horodate apparaissant dans le flux de texte.
 
-5. Si la dernière ligne du flux de texte décrivant la scène n'est pas correcte:
-
-    ```
-    error: last line must be exactly 'end scene'
-    ```
-
-6. S'il existe plusieurs buildings avec le même identifiant:
+5. Si le format d'une observation `OBSERVATION` fournie dans le flux de texte
+   est invalide, on retourne `2` et on affiche le message:
 
     ```
-    error: building identifier ID is non unique
+    error: invalid observation format (OBSERVATION)
     ```
 
-   où `ID` est l'identifiant qui apparaît plus d'une fois
+   où `OBSERVATION` est la ligne de l'observation invalide.
 
-7. S'il existe des buildings qui se chevauchent (dont l'intersection a une aire
-   non vide):
-
-    ```
-    error: buildings ID1 and ID2 are overlapping
-    ```
-
-   où `ID1` et `ID2` sont les identifiants des buildings qui se chevauchent
-
-8. Si une ligne de type building a le mauvais nombre d'arguments:
+6. Finalement, si le décalage (*offset*) d'une observation `OBSERVATION`
+   fournie dans le flux de texte est négatif, on retourne aussi `2` et on
+   affiche:
 
     ```
-    error: building line has wrong number of arguments (line #N)
+    error: invalid offset (OBSERVATION)
     ```
 
-   où `N` est le numéro de la ligne problématique
+   où `OBSERVATION` est la ligne de l'observation invalide.
 
-8. Si une ligne de type building a un identifiant invalide
-
-    ```
-    error: invalid identifier "ID" (line #N)
-    ```
-
-   où `ID` est l'identifiant problématique et `N` est le numéro de la ligne
-   problématique
-
-9. Si une ligne de type building a une valeur `X` ou une valeur `Y` qui n'est
-   pas un entier valide:
-
-    ```
-    error: invalid integer "VALUE" (line #N)
-    ```
-
-   où `VALUE` est la valeur problématique et `N` est le numéro de la ligne
-   problématique
-
-10. Si une ligne de type building a une valeur `W` ou une valeur `H` qui n'est
-    pas un entier strictement positif valide:
-
-    ```
-    error: invalid positive integer "VALUE" (line #N)
-    ```
-
-    où `VALUE` est la valeur problématique et `N` est le numéro de la ligne
-    problématique
-
-Des erreurs similaires pour les lignes de type antenne doivent également être
-considérées. Toutes ces erreurs sont couvertes dans les tests fonctionnels
+Chacun des cas possibles d'erreur est couvert dans les tests fonctionnels
 disponibles dans les fichiers `test*.bats` du répertoire [`bats`](bats). En cas
 de doute sur le comportement à adopter dans certaines situations, n'hésitez pas
 à poser des questions pour avoir des précisions.
--->
 
 ## Hypothèses simplificatrices
 
