@@ -42,6 +42,7 @@ void run_describe(void) {
   struct Timeseries timeseries;
   timeseries_initialize_from_stdin(&timeseries);
   timeseries_print_stats(&timeseries);
+  timeseries_delete(&timeseries);
 }
 
 /**
@@ -51,6 +52,7 @@ void run_show(void) {
   struct Timeseries timeseries;
   timeseries_initialize_from_stdin(&timeseries);
   timeseries_print_observations(&timeseries);
+  timeseries_delete(&timeseries);
 }
 
 /**
