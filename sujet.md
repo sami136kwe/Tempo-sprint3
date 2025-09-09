@@ -71,15 +71,17 @@ Plus spécifiquement:
   [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339)
 * Les lignes suivantes du flux de texte contiennent les observations, une
   observation par ligne
-* Une observation est une ligne contenant deux valeurs, séparées par une espace
-* La première valeur d'une observation est un entier positif ou nul
-  correspondant au décalage (en secondes) du moment où l'observation est
-  effectuée par rapport à l'horodate de référence
-* La seconde valeur d'une observation est un entier correspondant à la valeur
-  observée
+* Une observation est une ligne contenant deux valeurs, séparées par une ou
+  plusieurs espaces (par exemple, `28800 40`)
+* La première valeur d'une observation (par exemple `28800`) est un entier
+  positif ou nul correspondant au décalage (en secondes) du moment où
+  l'observation est effectuée par rapport à l'horodate de référence
+  (`2025-09-01T00:00:00`)
+* La seconde valeur d'une observation (par exemple `40`) est un entier
+  correspondant à la valeur observée
 
-Une représentation graphique de la série temporelle est disponible dans le
-fichier PNG suivant:
+Une représentation graphique de la série temporelle ci-haut est disponible dans
+le fichier PNG suivant:
 ![Une série temporelle de 6 observations](doc/timeseries.png)
 
 Plus généralement, pour être valide, un flux de texte doit respecter les
@@ -118,6 +120,7 @@ Lorsque vous lancez le programme avec la sous-commande `help`, un manuel
 d'utilisation doit être affiché sur la sortie standard:
 
 ```text
+$ bin/tempo help
 Usage: tempo SUBCOMMAND
 Displays information about a timeseries.
 
@@ -174,15 +177,15 @@ Chaque observation est donnée par une paire d'horodate et de valeur entière.
 La sous-commande `describe` affiche différentes informations à propos de la
 série temporelle:
 
-* Son *domaine*: le plus petit intervalle temporel recouvrant toutes les
-  horodates des observations
-* Son *codomaine*: le plus petit intervalle de valeurs recouvrant toutes les
-  valeurs des observations
-* Sa *taille*: le nombre d'observations qu'elle contient
-* Sa *durée*: l'écart (en secondes) entre l'horodate de la dernière observation
-  et l'horodate de la première observation
-* Son *amplitude*: l'écart entre la plus grande valeur observée et la plus
-  petite valeur observée
+* Son *domaine* (*domain*): le plus petit intervalle temporel recouvrant toutes
+  les horodates des observations
+* Son *codomaine* (*codomain*): le plus petit intervalle de valeurs recouvrant
+  toutes les valeurs des observations
+* Sa *taille* (*size*): le nombre d'observations qu'elle contient
+* Sa *durée* (*duration*): l'écart (en secondes) entre l'horodate de la
+  dernière observation et l'horodate de la première observation
+* Son *amplitude* (*amplitude*): l'écart entre la plus grande valeur observée
+  et la plus petite valeur observée
 
 Toujours avec l'exemple précédent:
 
@@ -197,7 +200,7 @@ Amplitude: 40
 
 ## Validation
 
-Votre programme doit détecter les erreurs d'utilisation.
+Votre programme doit détecter certaines erreurs d'utilisation et de données.
 
 * Lorsqu'il s'exécute de façon normale (sans erreur), alors le code `0` doit
   être retourné.
@@ -205,8 +208,9 @@ Votre programme doit détecter les erreurs d'utilisation.
 * En cas d'erreur dans les données fournies en entrées, vous devez retourner le
   code `2`.
 
-Lorsqu'une erreur survient, un message expliquant l'erreur doit être affiché
-sur le canal d'erreur (`stderr`).
+Dans chaque cas d'erreur, un message expliquant l'erreur doit être affiché sur
+le canal d'erreur (`stderr`). Plus spécifiquement, les messages d'erreur
+doivent être les suivants:
 
 1. Si on oublie de fournir une sous-commande, la valeur `1` doit être retournée
    et le message suivant doit être affiché sur `stderr`:
@@ -232,13 +236,14 @@ sur le canal d'erreur (`stderr`).
     ```
 
 4. Si le format de l'horodate est valide, mais que l'horodate elle-même est
-   invalide, on retourne `2` ainsi que le message suivant
+   invalide (par exemple, la date `2025-02-31` ou l'heure `10:62:17`), on
+   retourne `2` ainsi que le message suivant
 
     ```
     error: invalid datetime (HORODATE)
     ```
 
-   où `HORODATE` est l'horodate apparaissant dans le flux de texte.
+   où `HORODATE` est l'horodate invalide apparaissant dans le flux de texte.
 
 5. Si le format d'une observation fournie dans le flux de texte est invalide,
    on retourne `2` et on affiche le message:
@@ -348,7 +353,7 @@ questions suivantes:
 
 Vous devez utiliser la syntaxe Markdown pour écrire une documentation claire et
 lisible. Vous pouvez en tout temps vérifier localement le fichier HTML produit
-sur votre machine à l'aide de [Pandoc](https://pandoc.org/), mais il est aussi
+sur votre machine à l'aide de [Pandoc](https://pandoc.org/). Il est aussi
 conseillé de vérifier, avant la remise finale, que le résultat produit sur la
 page d'accueil de GitLab est celui auquel vous vous attendez.
 
@@ -366,12 +371,12 @@ qualité de la langue, qui sera prise en considération dans le fichier
 Il est important de suivre l'évolution de votre projet à l'aide de Git. Vous
 devez cloner (à l'aide du bouton *fork*) le gabarit du projet fourni et ajouter
 vos modifications à l'aide de *commits*. En particulier, il est possible que
-des corrections soient apportées ultérieures à l'énoncé que vous pourrez
+des corrections ultérieures soient apportées à l'énoncé que vous pourrez
 récupérer facilement s'il y a un historique **commun**.
 
-N'oubliez pas de bien configurer correctement votre fichier `.gitconfig` qui
-permet de vous identifier comme auteur de *commits*, en y indiquant vos
-**véritables** prénom, nom et courriel.
+N'oubliez pas de bien configurer votre fichier `.gitconfig` qui permet de vous
+identifier comme auteur de *commits*, en y indiquant vos **véritables** prénom,
+nom et courriel.
 
 Les messages de *commit* doivent suivre [la convention de Chris
 Beams](https://chris.beams.io/posts/git-commit/), adaptée au français:
@@ -392,7 +397,7 @@ dépôts partagés par l'enseignant dans le cadre du cours.
 
 Finalement, n'oubliez pas d'inclure un fichier `.gitignore` en fonction de
 votre environnement de développement. Aussi, assurez-vous de ne pas versionner
-de fichiers inutiles (les fichiers binaires, entre autres, mais pas seulement).
+de fichiers inutiles, incluant les artéfacts produits.
 
 ### Langue
 
