@@ -16,4 +16,5 @@ build:
 test:
   stage: test
   script:
+    - apt install strace
     - make test || strace -f make test
