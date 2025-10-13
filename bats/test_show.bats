@@ -16,6 +16,11 @@ setup() {
   assert_output "2025-09-01T09:00:00 10"
 }
 
+@test "tempo show with timeseries of size 1 with spaces works" {
+  run tempo show < "$examples_dir/1space.ts"
+  assert_output "2025-09-01T09:00:00 10"
+}
+
 @test "tempo show with chronological timeseries of size 2 works" {
   run tempo show < "$examples_dir/2.ts"
   assert_line --index 0 "2025-09-01T09:00:00 10"
@@ -30,6 +35,11 @@ setup() {
 
 @test "tempo show with timeseries with repeated offsets works" {
   run tempo show < "$examples_dir/2dbl.ts"
+  assert_output "2025-09-01T09:00:00 20"
+}
+
+@test "tempo show with timeseries with multiple repeated offsets works" {
+  run tempo show < "$examples_dir/3dbl.ts"
   assert_output "2025-09-01T09:00:00 20"
 }
 

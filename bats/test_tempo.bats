@@ -15,6 +15,11 @@ setup() {
   assert_line --index 1 "Displays information about a timeseries."
 }
 
+@test "tempo help describes a valid timeseries text stream" {
+  run tempo help
+  assert_line --partial "a text stream that must satisfy the following syntax"
+}
+
 @test "tempo help mentions the describe subcommand" {
   run tempo help
   assert_line --partial "  describe:"

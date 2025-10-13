@@ -33,6 +33,12 @@ setup() {
   assert_output "error: invalid datetime (2025-02-29T00:00:00)"
 }
 
+@test "tempo show with another wrong day returns an error" {
+  run tempo show < "$examples_dir/wrong_day2.invalid"
+  [ "$status" -eq 2 ]
+  assert_output "error: invalid datetime (2025-04-31T00:00:00)"
+}
+
 @test "tempo show with wrong month returns an error" {
   run tempo show < "$examples_dir/wrong_month.invalid"
   [ "$status" -eq 2 ]
@@ -47,6 +53,12 @@ setup() {
 
 # Wrong observation
 # -----------------
+
+@test "tempo show with empty observation line returns an error" {
+  run tempo show < "$examples_dir/empty_observation.invalid"
+  [ "$status" -eq 2 ]
+  assert_output "error: invalid observation format ()"
+}
 
 @test "tempo show with wrong character in observation returns an error" {
   run tempo show < "$examples_dir/wrong_char_observation.invalid"

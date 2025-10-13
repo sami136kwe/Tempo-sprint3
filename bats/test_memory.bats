@@ -15,6 +15,10 @@ setup() {
   $valgrind tempo help
 }
 
-@test "tempo show runs without memory problem" {
+@test "tempo show runs without memory problem on empty timeseries" {
+  $valgrind tempo show < "$examples_dir/empty.ts"
+}
+
+@test "tempo show runs without memory problem on nonempty timeseries" {
   $valgrind tempo show < "$examples_dir/6.ts"
 }
