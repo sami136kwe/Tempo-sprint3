@@ -155,7 +155,16 @@ void timeseries_set_last_datetime(struct Timeseries* timeseries) {
  * Reports that an empty timeseries cannot be interpolated
  */
 void report_cannot_interpolate_empty_timeseries(void) {
-  fprintf(stderr, "error: cannot interpolate with empty timeseries\n");
+  fprintf(stderr, "error: cannot interpolate (empty timeseries)\n");
+  exit(2);
+}
+
+/**
+ * Reports that the timeseries cannot be interpolated at a datetime outside of
+ * range
+ */
+void report_cannot_interpolate_outside_of_range(void) {
+  fprintf(stderr, "error: cannot interpolate (outside of range)\n");
   exit(2);
 }
 
@@ -209,6 +218,24 @@ unsigned int timeseries_amplitude(const struct Timeseries* timeseries) {
                      timeseries_min_value(timeseries));
 }
 
+int timeseries_interpolation(const struct Timeseries* timeseries,
+                             const struct Datetime* datetime) {
+  if (datetime_compare(datetime, &timeseries->start_datetime) < 0 ||
+      datetime_compare(&timeseries->last_datetime, datetime) < 0)
+    report_cannot_interpolate_outside_of_range();
+  int offset = datetime_diff(&timeseries->start_datetime, datetime);
+  size_t i = 0;
+  while (timeseries->offsets[i] < offset)
+    ++i;
+  if (timeseries->offsets[i] == offset)
+    return timeseries->values[i];
+  double p = (double)(offset - timeseries->offsets[i - 1])
+             /
+             (double)(timeseries->offsets[i] - timeseries->offsets[i - 1]);
+  return (int)((1.0 - p) * timeseries->values[i - 1] +
+               p * timeseries->values[i]);
+}
+
 void timeseries_print_stats(const struct Timeseries* timeseries) {
   printf("Domain: [%s, %s]\n",
          datetime_to_rfc3339_string(&timeseries->start_datetime),
@@ -227,12 +254,10 @@ void timeseries_print_interpolations(const struct Timeseries* timeseries) {
   if (timeseries->size == 0)
     report_cannot_interpolate_empty_timeseries();
   struct Datetime datetime = datetime_copy(&timeseries->start_datetime);
-  int i = 0;
   do {
     printf("%s %d\n", datetime_to_rfc3339_string(&datetime),
-                      10 + i);
+                      timeseries_interpolation(timeseries, &datetime));
     datetime_add_seconds(&datetime, 1);
-    ++i;
   } while (datetime_compare(&datetime, &timeseries->last_datetime) <= 0);
 }
 

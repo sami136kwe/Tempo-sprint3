@@ -9,7 +9,7 @@ setup() {
 @test "tempo interpolate with empty timeseries works" {
   run tempo interpolate < "$examples_dir/empty.ts"
   [ "$status" -eq 2 ]
-  assert_output "error: cannot interpolate with empty timeseries"
+  assert_output "error: cannot interpolate (empty timeseries)"
 }
 
 @test "tempo interpolate with timeseries of size 1 works" {
@@ -25,4 +25,19 @@ setup() {
   assert_line --index 3 "2025-09-01T09:00:03 13"
   assert_line --index 4 "2025-09-01T09:00:04 14"
   assert_line --index 5 "2025-09-01T09:00:05 15"
+}
+
+@test "tempo interpolate with 10 seconds range timeseries of size 3 works" {
+  run tempo interpolate < "$examples_dir/3_10s.ts"
+  assert_line --index 0  "2025-09-01T09:00:00 10"
+  assert_line --index 1  "2025-09-01T09:00:01 12"
+  assert_line --index 2  "2025-09-01T09:00:02 14"
+  assert_line --index 3  "2025-09-01T09:00:03 16"
+  assert_line --index 4  "2025-09-01T09:00:04 18"
+  assert_line --index 5  "2025-09-01T09:00:05 20"
+  assert_line --index 6  "2025-09-01T09:00:06 19"
+  assert_line --index 7  "2025-09-01T09:00:07 18"
+  assert_line --index 8  "2025-09-01T09:00:08 17"
+  assert_line --index 9  "2025-09-01T09:00:09 16"
+  assert_line --index 10 "2025-09-01T09:00:10 15"
 }
