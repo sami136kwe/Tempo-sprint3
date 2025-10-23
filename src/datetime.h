@@ -8,7 +8,6 @@
 
 // The length of a datetime
 #define DATETIME_LENGTH 19
-
 // Types
 // -----
 
@@ -36,6 +35,18 @@ struct Datetime {
 void datetime_initialize(struct Datetime* datetime,
                          int year, int month, int day,
                          int hour, int min, int sec);
+
+/**
+ * Compares two datetimes chronologically
+ *
+ * The function returns
+ *
+ * - -1 if the first datetime occurs before the second datetime
+ * - 0 if the datetimes are the same
+ * - 1 if the first datetime occurs after the second datetime
+ */
+int datetime_compare(const struct Datetime* datetime1,
+                     const struct Datetime* datetime2);
 
 /**
  * Copies a datetime

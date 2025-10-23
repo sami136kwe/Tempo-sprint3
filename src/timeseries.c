@@ -226,7 +226,14 @@ void timeseries_print_stats(const struct Timeseries* timeseries) {
 void timeseries_print_interpolations(const struct Timeseries* timeseries) {
   if (timeseries->size == 0)
     report_cannot_interpolate_empty_timeseries();
-  timeseries_print_observations(timeseries);
+  struct Datetime datetime = datetime_copy(&timeseries->start_datetime);
+  int i = 0;
+  do {
+    printf("%s %d\n", datetime_to_rfc3339_string(&datetime),
+                      10 + i);
+    datetime_add_seconds(&datetime, 1);
+    ++i;
+  } while (datetime_compare(&datetime, &timeseries->last_datetime) <= 0);
 }
 
 void timeseries_print_observations(const struct Timeseries* timeseries) {
