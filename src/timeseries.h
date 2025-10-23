@@ -97,6 +97,13 @@ unsigned int timeseries_amplitude(const struct Timeseries* timeseries);
 void timeseries_print_stats(const struct Timeseries* timeseries);
 
 /**
+ * Prints the interpolations of a timeseries to stdout
+ *
+ * @param timeseries  The timeseries to print
+ */
+void timeseries_print_interpolations(const struct Timeseries* timeseries);
+
+/**
  * Prints the observations of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print

@@ -151,6 +151,14 @@ void timeseries_set_last_datetime(struct Timeseries* timeseries) {
   datetime_add_seconds(&timeseries->last_datetime, max_offset);
 }
 
+/**
+ * Reports that an empty timeseries cannot be interpolated
+ */
+void report_cannot_interpolate_empty_timeseries(void) {
+  fprintf(stderr, "error: cannot interpolate with empty timeseries\n");
+  exit(2);
+}
+
 // Functions
 // ---------
 
@@ -213,6 +221,12 @@ void timeseries_print_stats(const struct Timeseries* timeseries) {
   printf("Size: %d\n", timeseries->size);
   printf("Duration: %d\n", timeseries_duration(timeseries));
   printf("Amplitude: %d\n", timeseries_amplitude(timeseries));
+}
+
+void timeseries_print_interpolations(const struct Timeseries* timeseries) {
+  if (timeseries->size == 0)
+    report_cannot_interpolate_empty_timeseries();
+  timeseries_print_observations(timeseries);
 }
 
 void timeseries_print_observations(const struct Timeseries* timeseries) {

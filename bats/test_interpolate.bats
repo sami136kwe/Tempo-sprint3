@@ -12,16 +12,11 @@ setup() {
   assert_output "error: cannot interpolate with empty timeseries"
 }
 
-#@test "tempo interpolate with timeseries of size 1 works" {
-#  run tempo interpolate < "$examples_dir/1.ts"
-#  assert_output "2025-09-01T09:00:00 10"
-#}
-#
-#@test "tempo interpolate with timeseries of size 1 with spaces works" {
-#  run tempo interpolate < "$examples_dir/1space.ts"
-#  assert_output "2025-09-01T09:00:00 10"
-#}
-#
+@test "tempo interpolate with timeseries of size 1 works" {
+  run tempo interpolate < "$examples_dir/1.ts"
+  assert_output "2025-09-01T09:00:00 10"
+}
+
 #@test "tempo interpolate with chronological timeseries of size 2 works" {
 #  run tempo interpolate < "$examples_dir/2.ts"
 #  assert_line --index 0 "2025-09-01T09:00:00 10"

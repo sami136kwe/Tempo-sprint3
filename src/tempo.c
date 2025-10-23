@@ -47,14 +47,6 @@ void report_unrecognized_subcommand(const char* subcommand) {
 }
 
 /**
- * Reports that an empty timeseries cannot be interpolated
- */
-void report_cannot_interpolate_empty_timeseries(void) {
-  fprintf(stderr, "error: cannot interpolate with empty timeseries\n");
-  exit(2);
-}
-
-/**
  * Reports that too many arguments have been provided
  *
  * @param subcommand  The provided subcommand
@@ -89,6 +81,16 @@ void run_describe(void) {
 }
 
 /**
+ * Runs the 'interpolate' subcommand
+ */
+void run_interpolate(void) {
+  struct Timeseries timeseries;
+  timeseries_initialize_from_stdin(&timeseries);
+  timeseries_print_interpolations(&timeseries);
+  timeseries_delete(&timeseries);
+}
+
+/**
  * Runs the 'show' subcommand
  */
 void run_show(void) {
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
       check_if_too_many_arguments(argc, "help");
       printf(HELP);
     } else if (strcmp(subcommand, "interpolate") == 0) {
-      report_cannot_interpolate_empty_timeseries();
+      run_interpolate();
     } else if (strcmp(subcommand, "show") == 0) {
       check_if_too_many_arguments(argc, "show");
       run_show();
