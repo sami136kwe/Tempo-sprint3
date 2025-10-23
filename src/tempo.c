@@ -47,6 +47,14 @@ void report_unrecognized_subcommand(const char* subcommand) {
 }
 
 /**
+ * Reports that an empty timeseries cannot be interpolated
+ */
+void report_cannot_interpolate_empty_timeseries(void) {
+  fprintf(stderr, "error: cannot interpolate with empty timeseries\n");
+  exit(2);
+}
+
+/**
  * Reports that too many arguments have been provided
  *
  * @param subcommand  The provided subcommand
@@ -109,11 +117,14 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(subcommand, "help") == 0) {
       check_if_too_many_arguments(argc, "help");
       printf(HELP);
+    } else if (strcmp(subcommand, "interpolate") == 0) {
+      report_cannot_interpolate_empty_timeseries();
     } else if (strcmp(subcommand, "show") == 0) {
       check_if_too_many_arguments(argc, "show");
       run_show();
-    } else
+    } else {
       report_unrecognized_subcommand(subcommand);
+    }
     return 0;
   }
   fprintf(stderr, "error: subcommand is mandatory\n");
