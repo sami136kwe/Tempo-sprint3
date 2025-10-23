@@ -30,7 +30,7 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
     datetime_initialize(&timeseries->start_datetime, y, m, d, h, min, s);
   else {
     fprintf(stderr,
-            "error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)");
+            "error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)");
     exit(2);
   }
 }

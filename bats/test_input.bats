@@ -12,19 +12,19 @@ setup() {
 @test "tempo show with datetime missing the character T returns an error" {
   run tempo show < "$examples_dir/missing_t.invalid"
   [ "$status" -eq 2 ]
-  assert_output "error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)"
+  assert_output "error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)"
 }
 
 @test "tempo show with wrong character in date returns an error" {
   run tempo show < "$examples_dir/wrong_char_date.invalid"
   [ "$status" -eq 2 ]
-  assert_output "error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)"
+  assert_output "error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)"
 }
 
 @test "tempo show with wrong character in time returns an error" {
   run tempo show < "$examples_dir/wrong_char_time.invalid"
   [ "$status" -eq 2 ]
-  assert_output "error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)"
+  assert_output "error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)"
 }
 
 @test "tempo show with wrong day returns an error" {
