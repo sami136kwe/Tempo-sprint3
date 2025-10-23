@@ -11,7 +11,7 @@ setup() {
 
 @test "tempo help shows the help" {
   run tempo help
-  assert_line --index 0 "Usage: tempo SUBCOMMAND"
+  assert_line --index 0 "Usage: tempo SUBCOMMAND [options]"
   assert_line --index 1 "Displays information about a timeseries."
 }
 
@@ -28,6 +28,11 @@ setup() {
 @test "tempo help mentions the help subcommand" {
   run tempo help
   assert_line --partial "  help:"
+}
+
+@test "tempo help mentions the interpolate subcommand" {
+  run tempo help
+  assert_line --partial "  interpolate:"
 }
 
 @test "tempo help mentions the show subcommand" {

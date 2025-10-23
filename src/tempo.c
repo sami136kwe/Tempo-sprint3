@@ -7,12 +7,13 @@
 // Constants
 // ---------
 
-#define HELP "Usage: tempo SUBCOMMAND\n\
+#define HELP "Usage: tempo SUBCOMMAND [options]\n\
 Displays information about a timeseries.\n\
 \n\
 SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
   help: shows this message\n\
+  interpolate: list the interpolations of the timeseries\n\
   show: list the observations of the timeseries\n\
 \n\
 A timeseries is a text stream that must satisfy the following syntax:\n\
