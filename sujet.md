@@ -6,9 +6,9 @@ trimestre d'automne 2025. Le cours est enseigné par Alexandre Blondin Massé,
 professeur au [département d'informatique](http://info.uqam.ca/),
 à l'[Université du Québec à Montréal](https://uqam.ca/).
 
-Le travail doit être remis au plus tard le **dimanche 12 octobre à 23h59**.
-À partir de minuit, une pénalité de **2 points** par heure de retard sera
-appliquée.
+Le travail doit être réalisé de façon individuelle et doit être remis au plus
+tard le **dimanche 12 octobre à 23h59**. À partir de minuit, une pénalité de
+**2 points** par heure de retard sera appliquée.
 
 ## Objectifs pédagogiques
 
@@ -232,7 +232,7 @@ doivent être les suivants:
    valeur `2` qui doit être retournée, ainsi que le message:
 
     ```
-    error: invalid datetime format (should be YYYY:mm:DDTHH:MM:SS)
+    error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)
     ```
 
 4. Si le format de l'horodate est valide, mais que l'horodate elle-même est
@@ -284,6 +284,38 @@ Aussi, vous n'avez pas à gérer les fuseaux horaires, les changements d'heure e
 les secondes intercalaires. Autrement dit, vous pouvez faire comme s'il
 n'existait qu'un seul fuseau horaire, qu'on ne changeait jamais l'heure et
 qu'il n'existait pas de secondes intercalaires.
+
+## Représentation des horodates
+
+La représentation des horodates en informatique n'est pas simple, en
+particulier si on a besoin de tenir compte des fuseaux horaires, des
+changements d'heure et des secondes intercalaires.
+
+En C, la bibliothèque `time.h` fournit des types et des fonctions facilitant
+leur manipulation. Cependant, certaines fonctions de cette bibliothèque sont
+aujourd'hui obsolètes, alors que d'autres peuvent entraîner des comportements
+surprenants et devraient donc être évités. Pour en savoir plus sur le sujet,
+consulter la page
+[http://www.catb.org/esr/time-programming/](http://www.catb.org/esr/time-programming/),
+qui explique en détail ces limitations et qui énumère certaines
+recommandations.
+
+Pour le premier travail pratique, il est suffisant d'utiliser les éléments
+suivants de la bibliothèque `time.h`:
+
+* Le type `time_t`, qui représente une horodate à l'aide d'une valeur
+  numérique;
+* Le type `struct tm`, qui représente une horodate en séparant chacun de ses
+  champs, comme l'année, le mois, le jour du mois, l'heure, les minutes et les
+  secondes;
+* La fonction `strftime`, qui convertit une instance de `struct tm` en chaîne
+  de caractères;
+* La fonction `difftime`, qui retourne le temps écoulé entre deux horodates;
+* La fonction `gmtime`, qui convertit une valeur de type `time_t` en instance
+  de type `struct tm`;
+* La fonction `utils_timegm`, fournie dans le module `utils`, que vous pouvez
+  utiliser en ajoutant la directive `#include "utils.h"`, qui convertit une
+  instance de type `struct tm` en valeur de type `time_t`.
 
 ## Tâches à accomplir
 
@@ -449,10 +481,10 @@ Les critères d'évaluation sont les suivants:
 
 Plus précisément, les éléments suivants seront pris en compte:
 
-- **Fonctionnalité (80 points)**: Le programme passe les tests *publics* et
+- **Fonctionnalité (60 points)**: Le programme passe les tests *publics* et
   *privés* en affichant le résultat attendu (1 point par test).
 
-- **Qualité du code (20 points)**: Les identifiants utilisés sont significatifs
+- **Qualité du code (15 points)**: Les identifiants utilisés sont significatifs
   et ont une syntaxe uniforme, le code est bien indenté, il y a de l'aération
   autour des opérateurs et des parenthèses, le programme est simple et lisible.
   Pas de bout de code en commentaire, de commentaires inutiles ou de
@@ -462,7 +494,7 @@ Plus précisément, les éléments suivants seront pris en compte:
   impeccable mais que votre travail est peu avancé, vous aurez peu de points
   pour cette partie.
 
-- **Documentation (20 points)**: Le fichier `README.md` contient toute
+- **Documentation (15 points)**: Le fichier `README.md` contient toute
   l'information demandée et utilise adéquatement le format Markdown. Toutes les
   fonctions sans exception ont une *docstring* qui suit le format suggéré en
   classe. La rédaction est soignée et contient peu ou pas de fautes
