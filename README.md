@@ -213,3 +213,31 @@ Size: 6
 Duration: 172800
 Amplitude: 40
 ```
+
+## La sous-commande `interpolate`
+
+La sous-commande `interpolate` est similaire à la sous-commande `show`, mais
+affiche les interpolations en plus des observations contenues dans la série
+temporelle sur la sortie standard.
+
+Par exemple, si on prend la série temporelle décrite dans le fichier
+[`examples/3_10s.ts`](examples/3_10s.ts)), alors on obtient ceci:
+
+```
+$ bin/tempo interpolate < examples/3_10s.ts
+2025-09-01T09:00:00 10
+2025-09-01T09:00:01 12
+2025-09-01T09:00:02 14
+2025-09-01T09:00:03 16
+2025-09-01T09:00:04 18
+2025-09-01T09:00:05 20
+2025-09-01T09:00:06 19
+2025-09-01T09:00:07 18
+2025-09-01T09:00:08 17
+2025-09-01T09:00:09 16
+2025-09-01T09:00:10 15
+```
+
+Ainsi, la commande affiche les 3 observations contenues dans la série
+temporelle, en ordre chronologique, ainsi que toutes les valeurs interpolées
+entre ces observations, pour chaque seconde.
