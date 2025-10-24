@@ -113,8 +113,10 @@ void timeseries_print_stats(const struct Timeseries* timeseries);
  * Prints the interpolations of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print
+ * @param step        The interpolation step (in seconds)
  */
-void timeseries_print_interpolations(const struct Timeseries* timeseries);
+void timeseries_print_interpolations(const struct Timeseries* timeseries,
+                                     unsigned int step);
 
 /**
  * Prints the observations of a timeseries to stdout

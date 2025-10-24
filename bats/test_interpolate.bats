@@ -17,7 +17,7 @@ setup() {
   assert_output "2025-09-01T09:00:00 10"
 }
 
-@test "tempo interpolate with 5 seconds range timeseries of size 2 works" {
+@test "tempo interpolate with timeseries of size 2 works" {
   run tempo interpolate < "$examples_dir/2_5s.ts"
   assert_line --index 0 "2025-09-01T09:00:00 10"
   assert_line --index 1 "2025-09-01T09:00:01 11"
@@ -27,7 +27,7 @@ setup() {
   assert_line --index 5 "2025-09-01T09:00:05 15"
 }
 
-@test "tempo interpolate with 10 seconds range timeseries of size 3 works" {
+@test "tempo interpolate with timeseries of size 3 works" {
   run tempo interpolate < "$examples_dir/3_10s.ts"
   assert_line --index 0  "2025-09-01T09:00:00 10"
   assert_line --index 1  "2025-09-01T09:00:01 12"
@@ -40,4 +40,11 @@ setup() {
   assert_line --index 8  "2025-09-01T09:00:08 17"
   assert_line --index 9  "2025-09-01T09:00:09 16"
   assert_line --index 10 "2025-09-01T09:00:10 15"
+}
+
+@test "tempo interpolate -s 4s with timeseries of size 3 works" {
+  run tempo interpolate -s 4s < "$examples_dir/3_10s.ts"
+  assert_line --index 0 "2025-09-01T09:00:00 10"
+  assert_line --index 1 "2025-09-01T09:00:04 18"
+  assert_line --index 2 "2025-09-01T09:00:08 17"
 }

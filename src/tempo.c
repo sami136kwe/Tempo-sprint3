@@ -83,11 +83,13 @@ void run_describe(void) {
 
 /**
  * Runs the 'interpolate' subcommand
+ *
+ * @param step  The interpolation step (in seconds)
  */
-void run_interpolate(void) {
+void run_interpolate(unsigned int step) {
   struct Timeseries timeseries;
   timeseries_initialize_from_stdin(&timeseries);
-  timeseries_print_interpolations(&timeseries);
+  timeseries_print_interpolations(&timeseries, step);
   timeseries_delete(&timeseries);
 }
 
@@ -121,7 +123,12 @@ int main(int argc, char *argv[]) {
       check_if_too_many_arguments(argc, "help");
       printf(HELP);
     } else if (strcmp(subcommand, "interpolate") == 0) {
-      run_interpolate();
+      unsigned int step = 1;
+      char unit = 's';
+      if (argc == 4 &&
+          (strcmp(argv[2], "-s") == 0 || strcmp(argv[2], "--step") == 0))
+        sscanf(argv[3], "%u%c", &step, &unit);
+      run_interpolate(step);
     } else if (strcmp(subcommand, "show") == 0) {
       check_if_too_many_arguments(argc, "show");
       run_show();
