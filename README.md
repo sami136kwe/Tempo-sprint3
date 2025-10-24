@@ -241,3 +241,18 @@ $ bin/tempo interpolate < examples/3_10s.ts
 Ainsi, la commande affiche les 3 observations contenues dans la série
 temporelle, en ordre chronologique, ainsi que toutes les valeurs interpolées
 entre ces observations, pour chaque seconde.
+
+Par défaut, un pas d'une seconde est utilisé pour chaque interpolation.
+L'option `-s|--step N[smh]` permet de spécifier la durée du pas de temps entre
+chaque interpolation, où `N` est un entier strictement positif et `[smh]` est
+un caractère parmi `s` (secondes), `m` (minutes) et `h` (heures).
+
+En reprenant la série [`3_10s`](examples/3_10s.ts), pour interpoler selon un
+pas de 4 secondes, on peut donc entrer la commande suivante:
+
+```
+$ bin/tempo interpolate -s 4s < examples/3_10s.ts
+2025-09-01T09:00:00 10
+2025-09-01T09:00:04 18
+2025-09-01T09:00:08 17
+```
