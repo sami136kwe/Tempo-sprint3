@@ -14,6 +14,7 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
   help: shows this message\n\
   interpolate: list the interpolations of the timeseries\n\
+    -s|--step DURATION: the duration of each interpolation step\n\
   show: list the observations of the timeseries\n\
 \n\
 A timeseries is a text stream that must satisfy the following syntax:\n\
