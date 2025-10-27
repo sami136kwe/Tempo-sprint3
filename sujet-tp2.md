@@ -266,6 +266,10 @@ $ bin/temp interpolate --step 10m < example/serie.ts
 $ bin/temp interpolate -s 4h < example/serie.ts
 ```
 
+Plus spécifiquement, vous devez minimalement apporter les modifications
+suivantes, en plaçant tous vos *commits* sur la branche
+`interpolate-step-option`:
+
 1. Étendre la base de code afin de supporter cette nouvelle option
 2. Mettre à jour les tests fonctionnels (tests Bats) existants s'il y a lieu
 3. Ajouter de nouveaux tests fonctionnels reflétant les modifications apportées
