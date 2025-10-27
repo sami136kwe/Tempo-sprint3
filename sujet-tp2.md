@@ -221,13 +221,15 @@ suivantes, en plaçant tous vos *commits* sur la branche
 `interpolate-subcommand`:
 
 1. Étendre la base de code afin de supporter cette nouvelle sous-commande
-2. Mettre à jour les tests fonctionnels (tests Bats) existants s'il y a lieu
-3. Ajouter de nouveaux tests fonctionnels reflétant les modifications apportées
-4. Mettre à jour la documentation (l'aide `tempo help`, les *docstrings* des
+2. Ne pas introduire de problème de mémoire
+3. Mettre à jour les tests fonctionnels (tests Bats) existants s'il y a lieu
+4. Ajouter de nouveaux tests fonctionnels reflétant les modifications apportées
+5. Ne pas introduire de régression dans les tests Bats existants
+6. Mettre à jour la documentation (l'aide `tempo help`, les *docstrings* des
    fonctions impactées, le fichier `README.md`) pour refléter les changements
    apportés
-5. Vous assurer de respecter le style de programmation existant
-6. Répartir vos modifications le plus possible en différents *commits*
+7. Vous assurer de respecter le style de programmation existant
+8. Répartir vos modifications le plus possible en différents *commits*
    atomiques, en formatant vos messages selon le style demandé dans le cadre du
    travail pratique 1
 
@@ -237,7 +239,9 @@ Finalement, la quatrième tâche consiste à étendre la sous-commande
 `interpolate` afin de spécifier un pas de temps arbitraire, en supportant
 l'option `-s|--step`.
 
-Par exemple, si on reprend l'exemple plus haut:
+Par exemple, si on reprend l'exemple plus haut et qu'on souhaite plutôt
+utiliser un pas de temps de 2 secondes, on devrait pouvoir entrer la commande
+suivante:
 
 ```
 $ bin/tempo interpolate -s 2s < example/3_10s.ts
@@ -271,13 +275,15 @@ suivantes, en plaçant tous vos *commits* sur la branche
 `interpolate-step-option`:
 
 1. Étendre la base de code afin de supporter cette nouvelle option
-2. Mettre à jour les tests fonctionnels (tests Bats) existants s'il y a lieu
-3. Ajouter de nouveaux tests fonctionnels reflétant les modifications apportées
-4. Mettre à jour la documentation (l'aide `tempo help`, les *docstrings* des
+2. Ne pas introduire de problème de mémoire
+3. Mettre à jour les tests fonctionnels (tests Bats) existants s'il y a lieu
+4. Ajouter de nouveaux tests fonctionnels reflétant les modifications apportées
+5. Ne pas introduire de régression dans les tests Bats existants
+6. Mettre à jour la documentation (l'aide `tempo help`, les *docstrings* des
    fonctions impactées, le fichier `README.md`) pour refléter les changements
    apportés
-5. Vous assurer de respecter le style de programmation existant
-6. Répartir vos modifications le plus possible en différents *commits*
+7. Vous assurer de respecter le style de programmation existant
+8. Répartir vos modifications le plus possible en différents *commits*
    atomiques, en formatant vos messages selon le style demandé dans le cadre du
    travail pratique 1
 
