@@ -260,6 +260,8 @@ positif, suivi d'un caractère choisi parmi `s` (seconde), `m` (minute) et `h`
 $ bin/temp interpolate -s 5s < example/serie.ts
 # Pour un pas de 10 minutes
 $ bin/temp interpolate -s 10m < example/serie.ts
+# L'option --step est synonyme de -s
+$ bin/temp interpolate --step 10m < example/serie.ts
 # Pour un pas de 4 heures
 $ bin/temp interpolate -s 4h < example/serie.ts
 ```
