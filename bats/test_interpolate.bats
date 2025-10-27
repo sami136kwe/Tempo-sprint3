@@ -48,3 +48,21 @@ setup() {
   assert_line --index 1 "2025-09-01T09:00:04 18"
   assert_line --index 2 "2025-09-01T09:00:08 17"
 }
+
+@test "tempo interpolate -s 30m with timeseries of size 2 works" {
+  run tempo interpolate -s 30m < "$examples_dir/2.ts"
+  assert_line --index 0 "2025-09-01T09:00:00 10"
+  assert_line --index 1 "2025-09-01T09:30:00 15"
+  assert_line --index 2 "2025-09-01T10:00:00 20"
+}
+
+@test "tempo interpolate -s 4h with timeseries 24h.ts works" {
+  run tempo interpolate -s 4h < "$examples_dir/24h.ts"
+  assert_line --index 0 "2025-09-01T09:00:00 10"
+  assert_line --index 1 "2025-09-01T13:00:00 12"
+  assert_line --index 2 "2025-09-01T17:00:00 14"
+  assert_line --index 3 "2025-09-01T21:00:00 16"
+  assert_line --index 4 "2025-09-02T01:00:00 18"
+  assert_line --index 5 "2025-09-02T05:00:00 20"
+  assert_line --index 6 "2025-09-02T09:00:00 22"
+}
