@@ -377,7 +377,7 @@ Plus précisément, les éléments suivants seront pris en compte:
   refléter les modifications, s'il y a lieu. Des nouveaux tests ont été ajoutés
   pour refléter l'ajout de la nouvelle sous-commande. Les *docstrings* du code
   source ont été mises à jour ou ajoutées aux nouvelles fonctions. Le fichier
-  `README.md` et l'aide (`kover help`) ont été mis à jour. Le style de
+  `README.md` et l'aide (`tempo help`) ont été mis à jour. Le style de
   programmation existant est respecté.
 
 - **Tâche 4 (20 points)**: L'application compile sans erreur et sans
@@ -388,7 +388,7 @@ Plus précisément, les éléments suivants seront pris en compte:
   pour refléter les modifications. Des nouveaux tests ont été ajoutés pour
   refléter l'ajout de la nouvelle option. Les *docstrings* du code source ont
   été mises à jour ou ajoutées aux nouvelles fonctions. Le fichier `README.md`
-  et l'aide (`kover help`) ont été mis à jour. Le style de programmation
+  et l'aide (`tempo help`) ont été mis à jour. Le style de programmation
   existant est respecté.
 
 - **Utilisation de Git (20 points)**: Les modifications sont réparties en
