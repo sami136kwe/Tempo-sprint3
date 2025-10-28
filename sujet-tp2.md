@@ -145,6 +145,8 @@ struct Timeseries {
   struct Datetime last_datetime;
   // The size of the timeseries
   unsigned int size;
+  // The capacity of the timeseries
+  unsigned int capacity;
   // The offsets of the observations
   int* offsets;
   // The observed values
@@ -152,11 +154,12 @@ struct Timeseries {
 };
 ```
 
-En plus de rendre la création de séries temporelles plus flexibles, vous devez
-gérer le cas hypothétique où on manquerait de mémoire (c'est-à-dire que
-l'allocation dynamique échoue). Dans ce cas, vous devez afficher le message
-`error: out of memory (timeseries)` et arrêter l'exécution du programme avec le
-code d'erreur `3`.
+(Noter que vous pourriez aussi utiliser le type `size_t` plutôt que `unsigned
+int` pour les champs `size` et `capacity`.) En plus de rendre la création de
+séries temporelles plus flexibles, vous devez gérer le cas hypothétique où on
+manquerait de mémoire (c'est-à-dire que l'allocation dynamique échoue). Dans ce
+cas, vous devez afficher le message `error: out of memory (timeseries)` et
+arrêter l'exécution du programme avec le code d'erreur `3`.
 
 Plus spécifiquement, vous devez minimalement apporter les modifications
 suivantes, en plaçant tous vos *commits* sur la branche `dynamic-timeseries`:
