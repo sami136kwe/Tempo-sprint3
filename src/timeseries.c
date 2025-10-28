@@ -18,6 +18,24 @@
 // --------------
 
 /**
+ * Reports that the timeseries module ran out of memory
+ */
+void report_out_of_memory(void) {
+  fprintf(stderr, "error: out of memory (timeseries)");
+  exit(2);
+}
+
+/**
+ * Checks if the timeseries ran out of memory
+ *
+ * @param timeseries  The timeseries to check
+ */
+void check_out_of_memory(const struct Timeseries* timeseries) {
+  if (timeseries->offsets == NULL || timeseries->values == NULL)
+    report_out_of_memory();
+}
+
+/**
  * Set the start datetime of the timeseries from stdin
  *
  * @param timeseries  The timeseries to set
@@ -79,6 +97,7 @@ void timeseries_add_observation(struct Timeseries* timeseries,
                                     timeseries->capacity * sizeof(int));
       timeseries->values = realloc(timeseries->values,
                                    timeseries->capacity * sizeof(int));
+      check_out_of_memory(timeseries);
     }
     i = timeseries->size;
     while (i > 0 && offset < timeseries->offsets[i - 1]) {
@@ -140,6 +159,7 @@ void timeseries_initialize(struct Timeseries* timeseries) {
   timeseries->capacity = 1;
   timeseries->offsets = malloc(sizeof(int));
   timeseries->values = malloc(sizeof(int));
+  check_out_of_memory(timeseries);
 }
 
 void timeseries_initialize_from_stdin(struct Timeseries* timeseries) {
