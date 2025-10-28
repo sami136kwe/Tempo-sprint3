@@ -73,6 +73,13 @@ void timeseries_add_observation(struct Timeseries* timeseries,
   int idx = timeseries_offset_index(timeseries, offset);
   size_t i;
   if (idx == -1) {
+    if (timeseries->size == timeseries->capacity) {
+      timeseries->capacity *= 2;
+      timeseries->offsets = realloc(timeseries->offsets,
+                                    timeseries->capacity * sizeof(int));
+      timeseries->values = realloc(timeseries->values,
+                                   timeseries->capacity * sizeof(int));
+    }
     i = timeseries->size;
     while (i > 0 && offset < timeseries->offsets[i - 1]) {
       timeseries->offsets[i] = timeseries->offsets[i - 1];
@@ -128,8 +135,15 @@ void timeseries_set_last_datetime(struct Timeseries* timeseries) {
 // Functions
 // ---------
 
-void timeseries_initialize_from_stdin(struct Timeseries* timeseries) {
+void timeseries_initialize(struct Timeseries* timeseries) {
   timeseries->size = 0;
+  timeseries->capacity = 1;
+  timeseries->offsets = malloc(sizeof(int));
+  timeseries->values = malloc(sizeof(int));
+}
+
+void timeseries_initialize_from_stdin(struct Timeseries* timeseries) {
+  timeseries_initialize(timeseries);
   timeseries_set_start_datetime_from_stdin(timeseries);
   timeseries_set_observations_from_stdin(timeseries);
   timeseries_set_last_datetime(timeseries);
@@ -138,6 +152,8 @@ void timeseries_initialize_from_stdin(struct Timeseries* timeseries) {
 void timeseries_delete(struct Timeseries* timeseries) {
   datetime_delete(&timeseries->start_datetime);
   datetime_delete(&timeseries->last_datetime);
+  free(timeseries->offsets);
+  free(timeseries->values);
 }
 
 int timeseries_min_value(const struct Timeseries* timeseries) {
