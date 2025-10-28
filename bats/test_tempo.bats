@@ -49,3 +49,9 @@ setup() {
   [ "$status" -eq 1 ]
   assert_line --index 0 "error: unrecognized subcommand 'sc'"
 }
+
+@test "tempo help with additional arguments returns an error" {
+  run tempo help me
+  [ "$status" -eq 1 ]
+  assert_line --index 0 "error: too many arguments to 'help' subcommand"
+}

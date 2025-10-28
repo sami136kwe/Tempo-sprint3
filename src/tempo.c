@@ -65,6 +65,16 @@ void report_unrecognized_subcommand(const char* subcommand) {
   exit(1);
 }
 
+/**
+ * Reports that too many arguments have been provided
+ *
+ * @param subcommand  The provided subcommand
+ */
+void report_too_many_arguments(const char* subcommand) {
+  fprintf(stderr, "error: too many arguments to '%s' subcommand", subcommand);
+  exit(1);
+}
+
 // Main
 // ----
 
@@ -80,9 +90,11 @@ int main(int argc, char *argv[]) {
     const char* subcommand = argv[1];
     if (strcmp(subcommand, "describe") == 0)
       run_describe();
-    else if (strcmp(subcommand, "help") == 0)
+    else if (strcmp(subcommand, "help") == 0) {
+      if (argc >= 3)
+        report_too_many_arguments("help");
       printf(HELP);
-    else if (strcmp(subcommand, "show") == 0)
+    } else if (strcmp(subcommand, "show") == 0)
       run_show();
     else
       report_unrecognized_subcommand(subcommand);
