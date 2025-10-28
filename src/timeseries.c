@@ -22,7 +22,7 @@
  */
 void report_out_of_memory(void) {
   fprintf(stderr, "error: out of memory (timeseries)");
-  exit(2);
+  exit(3);
 }
 
 /**
