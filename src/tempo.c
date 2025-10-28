@@ -88,15 +88,19 @@ void report_too_many_arguments(const char* subcommand) {
 int main(int argc, char *argv[]) {
   if (argc >= 2) {
     const char* subcommand = argv[1];
-    if (strcmp(subcommand, "describe") == 0)
+    if (strcmp(subcommand, "describe") == 0) {
+      if (argc >= 3)
+        report_too_many_arguments("describe");
       run_describe();
-    else if (strcmp(subcommand, "help") == 0) {
+    } else if (strcmp(subcommand, "help") == 0) {
       if (argc >= 3)
         report_too_many_arguments("help");
       printf(HELP);
-    } else if (strcmp(subcommand, "show") == 0)
+    } else if (strcmp(subcommand, "show") == 0) {
+      if (argc >= 3)
+        report_too_many_arguments("show");
       run_show();
-    else
+    } else
       report_unrecognized_subcommand(subcommand);
     return 0;
   }

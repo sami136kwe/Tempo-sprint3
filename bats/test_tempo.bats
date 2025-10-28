@@ -50,8 +50,20 @@ setup() {
   assert_line --index 0 "error: unrecognized subcommand 'sc'"
 }
 
+@test "tempo describe with additional arguments returns an error" {
+  run tempo describe timeseries < "$examples_dir/1.ts"
+  [ "$status" -eq 1 ]
+  assert_line --index 0 "error: too many arguments to 'describe' subcommand"
+}
+
 @test "tempo help with additional arguments returns an error" {
   run tempo help me
   [ "$status" -eq 1 ]
   assert_line --index 0 "error: too many arguments to 'help' subcommand"
+}
+
+@test "tempo show with additional arguments returns an error" {
+  run tempo show timeseries < "$examples_dir/1.ts"
+  [ "$status" -eq 1 ]
+  assert_line --index 0 "error: too many arguments to 'show' subcommand"
 }
