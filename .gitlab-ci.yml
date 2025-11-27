@@ -7,12 +7,17 @@ stages:
 build:
   stage: build
   script:
-    - make build || strace -f make build
+    - make build
   artifacts:
     paths:
       - bin/tempo
 
-test:
+test-bats:
   stage: test
   script:
-    - make test || strace -f make test
+    - make test-bats
+
+test-libtap:
+  stage: test
+  script:
+    - make test-libtap
