@@ -11,6 +11,11 @@ void report_memory_problem(const char* context) {
   exit(1);
 }
 
+void report_out_of_memory(void) {
+  fprintf(stderr, "error: out of memory (timeseries)");
+  exit(3);
+}
+
 // Datetimes
 // ---------
 
@@ -22,9 +27,38 @@ void report_invalid_datetime(int year, int month, int day,
   exit(2);
 }
 
+void report_invalid_datetime_format(void) {
+  fprintf(stderr,
+          "error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)");
+  exit(2);
+}
+
 void report_time_conversion_error(time_t t) {
   fprintf(stderr, "error: could not convert timestamp %ld to struct tm\n", t);
   exit(-1);
+}
+
+// Timeseries
+// ----------
+
+void report_invalid_observation_format(const char* s) {
+  fprintf(stderr, "error: invalid observation format (%s)", s);
+  exit(2);
+}
+
+void report_invalid_offset(const char* s) {
+  fprintf(stderr, "error: invalid offset (%s)", s);
+  exit(2);
+}
+
+void report_cannot_interpolate_empty_timeseries(void) {
+  fprintf(stderr, "error: cannot interpolate (empty timeseries)\n");
+  exit(2);
+}
+
+void report_cannot_interpolate_outside_of_range(void) {
+  fprintf(stderr, "error: cannot interpolate (outside of range)\n");
+  exit(2);
 }
 
 // CLI

@@ -13,6 +13,11 @@
  */
 void report_memory_problem(const char* context);
 
+/**
+ * Reports that the timeseries module ran out of memory
+ */
+void report_out_of_memory(void);
+
 // Datetimes
 // ---------
 
@@ -30,11 +35,44 @@ void report_invalid_datetime(int year, int month, int day,
                              int hour, int min, int sec);
 
 /**
+ * Reports that the provided datetime string has invalid format
+ */
+void report_invalid_datetime_format(void);
+
+/**
  * Reports that a conversion from time_t to struct tm failed
  *
  * @param t  The provided timestamp
  */
 void report_time_conversion_error(time_t t);
+
+// Timeseries
+// ----------
+
+/**
+ * Reports that the provided string has an invalid observation format
+ *
+ * @param s  The provided string
+ */
+void report_invalid_observation_format(const char* s);
+
+/**
+ * Reports that the provided string contains an invalid offset
+ *
+ * @param s  The provided string
+ */
+void report_invalid_offset(const char* s);
+
+/**
+ * Reports that an empty timeseries cannot be interpolated
+ */
+void report_cannot_interpolate_empty_timeseries(void);
+
+/**
+ * Reports that the timeseries cannot be interpolated at a datetime outside of
+ * range
+ */
+void report_cannot_interpolate_outside_of_range(void);
 
 // CLI
 // ---

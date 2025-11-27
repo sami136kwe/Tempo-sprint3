@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "datetime.h"
+#include "validation.h"
 
 // Constants
 // ---------
@@ -16,14 +17,6 @@
 
 // Help functions
 // --------------
-
-/**
- * Reports that the timeseries module ran out of memory
- */
-void report_out_of_memory(void) {
-  fprintf(stderr, "error: out of memory (timeseries)");
-  exit(3);
-}
 
 /**
  * Checks if the timeseries ran out of memory
@@ -46,11 +39,8 @@ void timeseries_set_start_datetime_from_stdin(struct Timeseries* timeseries) {
   int y, m, d, h, min, s;
   if (sscanf(line, "%4d-%2d-%2dT%2d:%2d:%2d", &y, &m, &d, &h, &min, &s) == 6)
     datetime_initialize(&timeseries->start_datetime, y, m, d, h, min, s);
-  else {
-    fprintf(stderr,
-            "error: invalid datetime format (should be YYYY-mm-DDTHH:MM:SS)");
-    exit(2);
-  }
+  else
+    report_invalid_datetime_format();
 }
 
 /**
@@ -125,15 +115,12 @@ void timeseries_set_observations_from_stdin(struct Timeseries* timeseries) {
     int offset, value;
     char trailing;
     int num_fields = sscanf(line, "%d %d%c", &offset, &value, &trailing);
-    if (num_fields != 2) {
-      fprintf(stderr, "error: invalid observation format (%s)", line);
-      exit(2);
-    } else if (offset < 0) {
-      fprintf(stderr, "error: invalid offset (%s)", line);
-      exit(2);
-    } else {
+    if (num_fields != 2)
+      report_invalid_observation_format(line);
+    else if (offset < 0)
+      report_invalid_offset(line);
+    else
       timeseries_add_observation(timeseries, offset, value);
-    }
   }
 }
 
@@ -149,23 +136,6 @@ void timeseries_set_last_datetime(struct Timeseries* timeseries) {
       timeseries->offsets[i] : max_offset;
   timeseries->last_datetime = datetime_copy(&timeseries->start_datetime);
   datetime_add_seconds(&timeseries->last_datetime, max_offset);
-}
-
-/**
- * Reports that an empty timeseries cannot be interpolated
- */
-void report_cannot_interpolate_empty_timeseries(void) {
-  fprintf(stderr, "error: cannot interpolate (empty timeseries)\n");
-  exit(2);
-}
-
-/**
- * Reports that the timeseries cannot be interpolated at a datetime outside of
- * range
- */
-void report_cannot_interpolate_outside_of_range(void) {
-  fprintf(stderr, "error: cannot interpolate (outside of range)\n");
-  exit(2);
 }
 
 // Functions
