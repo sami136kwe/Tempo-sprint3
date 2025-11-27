@@ -4,7 +4,7 @@ cflags = -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
 				 -Wduplicated-branches -Wnull-dereference -Wjump-misses-init \
 				 -fanalyzer
 exec = tempo
-objects = datetime.o timeseries.o utils.o
+objects = datetime.o timeseries.o utils.o validation.o
 
 .PHONY: build clean
 

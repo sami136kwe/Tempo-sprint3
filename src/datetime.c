@@ -6,16 +6,7 @@
 #include <string.h>
 
 #include "utils.h"
-
-/**
- * Reports a memory problem with a given context
- *
- * @param context  The context of the memory problem
- */
-void report_memory_problem(const char* context) {
-  fprintf(stderr, "error: memory allocation failed %s\n", context);
-  exit(1);
-}
+#include "validation.h"
 
 /**
  * Indicates if a given datetime is valid
@@ -55,10 +46,9 @@ bool datetime_is_valid(int year, int month, int day,
 }
 
 /**
- * Checks if the given datetime field form a valid datetime
+ * Checks if the given datetime fields form a valid datetime
  *
- * If the datetime is invalid, prints an error message on stderr and terminates
- * the program with exit status 2.
+ * If not, reports it on stderr and exit.
  *
  * @param year   The year of the datetime
  * @param month  The month of the datetime
@@ -69,12 +59,8 @@ bool datetime_is_valid(int year, int month, int day,
  */
 void datetime_validate(int year, int month, int day,
                        int hour, int min, int sec) {
-  if (!datetime_is_valid(year, month, day, hour, min, sec)) {
-    fprintf(stderr,
-            "error: invalid datetime (%.4d-%.2d-%.2dT%.2d:%.2d:%.2d)\n", 
-            year, month, day, hour, min, sec);
-    exit(2);
-  }
+  if (!datetime_is_valid(year, month, day, hour, min, sec))
+    report_invalid_datetime(year, month, day, hour, min, sec);
 }
 
 void datetime_initialize(struct Datetime* datetime,
@@ -112,7 +98,8 @@ struct Datetime datetime_copy(const struct Datetime* datetime) {
   copy.rfc3339_string = malloc((DATETIME_LENGTH + 1) * sizeof(char));
   if (copy.rfc3339_string == NULL)
     report_memory_problem("when trying to initialize copy->rfc3339_string");
-  strcpy(copy.rfc3339_string, "");
+  else
+    strcpy(copy.rfc3339_string, "");
   return copy;
 }
 
@@ -124,8 +111,7 @@ const char* datetime_to_rfc3339_string(const struct Datetime* datetime) {
   if (strcmp(datetime->rfc3339_string, "") == 0) {
     struct tm* tm = gmtime(&datetime->t);
     if (tm == NULL)
-      fprintf(stderr, "error: could not convert timestamp %ld to struct tm\n",
-              datetime->t);
+      report_time_conversion_error(datetime->t);
     strftime(datetime->rfc3339_string, DATETIME_LENGTH + 1,
              "%Y-%m-%dT%H:%M:%S", tm);
   }
