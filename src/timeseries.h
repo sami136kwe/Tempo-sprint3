@@ -6,9 +6,6 @@
 // Constants
 // ---------
 
-// The maximum size of a timeseries
-#define MAX_SIZE 1000
-
 // Types
 // -----
 
@@ -20,10 +17,12 @@ struct Timeseries {
   struct Datetime last_datetime;
   // The size of the timeseries
   unsigned int size;
+  // The capacity of the timeseries
+  unsigned int capacity;
   // The offsets of the observations
-  int offsets[MAX_SIZE];
+  int* offsets;
   // The observed values
-  int values[MAX_SIZE];
+  int* values;
 };
 
 // Functions
@@ -31,6 +30,15 @@ struct Timeseries {
 
 /**
  * Initializes an empty timeseries
+ *
+ * @param timeseries  The timeseries to initialize
+ */
+void timeseries_initialize(struct Timeseries* timeseries);
+
+/**
+ * Initializes an empty timeseries
+ *
+ * @param timeseries  The timeseries to initialize
  */
 void timeseries_initialize_from_stdin(struct Timeseries* timeseries);
 
