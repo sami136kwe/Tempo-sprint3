@@ -108,25 +108,23 @@ void run_show(void) {
  * @return      0 if usage is normal, 1 otherwise
  */
 int main(int argc, char *argv[]) {
-  if (argc >= 2) {
-    const char* subcommand = argv[1];
-    if (strcmp(subcommand, "describe") == 0) {
-      check_if_too_many_arguments(argc, "describe");
-      run_describe();
-    } else if (strcmp(subcommand, "help") == 0) {
-      check_if_too_many_arguments(argc, "help");
-      printf(HELP);
-    } else if (strcmp(subcommand, "interpolate") == 0) {
-      unsigned int step = interpolation_step(argc, argv);
-      run_interpolate(step);
-    } else if (strcmp(subcommand, "show") == 0) {
-      check_if_too_many_arguments(argc, "show");
-      run_show();
-    } else {
-      report_unrecognized_subcommand(subcommand);
-    }
-    return 0;
+  if (argc < 2)
+    report_subcommand_is_mandatory();
+  const char* subcommand = argv[1];
+  if (strcmp(subcommand, "describe") == 0) {
+    check_if_too_many_arguments(argc, "describe");
+    run_describe();
+  } else if (strcmp(subcommand, "help") == 0) {
+    check_if_too_many_arguments(argc, "help");
+    printf(HELP);
+  } else if (strcmp(subcommand, "interpolate") == 0) {
+    unsigned int step = interpolation_step(argc, argv);
+    run_interpolate(step);
+  } else if (strcmp(subcommand, "show") == 0) {
+    check_if_too_many_arguments(argc, "show");
+    run_show();
+  } else {
+    report_unrecognized_subcommand(subcommand);
   }
-  fprintf(stderr, "error: subcommand is mandatory\n");
-  return 1;
+  return 0;
 }

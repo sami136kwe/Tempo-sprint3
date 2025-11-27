@@ -48,8 +48,6 @@ bool datetime_is_valid(int year, int month, int day,
 /**
  * Checks if the given datetime fields form a valid datetime
  *
- * If not, reports it on stderr and exit.
- *
  * @param year   The year of the datetime
  * @param month  The month of the datetime
  * @param day    The day of the datetime

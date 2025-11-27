@@ -78,6 +78,11 @@ void report_cannot_interpolate_outside_of_range(void);
 // ---
 
 /**
+ * Reports that a subcommand is mandatory
+ */
+void report_subcommand_is_mandatory(void);
+
+/**
  * Reports that an unrecognized subcommand has been provided
  *
  * @param subcommand  The provided subcommand

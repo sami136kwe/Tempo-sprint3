@@ -64,6 +64,11 @@ void report_cannot_interpolate_outside_of_range(void) {
 // CLI
 // ---
 
+void report_subcommand_is_mandatory(void) {
+  fprintf(stderr, "error: subcommand is mandatory\n");
+  exit(1);
+}
+
 void report_unrecognized_subcommand(const char* subcommand) {
   fprintf(stderr, "error: unrecognized subcommand '%s'", subcommand);
   exit(1);
