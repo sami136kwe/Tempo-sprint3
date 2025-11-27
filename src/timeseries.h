@@ -90,11 +90,31 @@ unsigned int timeseries_duration(const struct Timeseries* timeseries);
 unsigned int timeseries_amplitude(const struct Timeseries* timeseries);
 
 /**
+ * Returns the interpolation of the timeseries at the given datetime
+ *
+ * Note: If the datetime is outside the timeseries datetimes, an error is
+ * reported on stderr and the program stops.
+ *
+ * @param timeseries  The queried timeseries
+ * @param datetime    The datetime
+ * @return            The interpolation
+ */
+int timeseries_interpolation(const struct Timeseries* timeseries,
+                             const struct Datetime* datetime);
+
+/**
  * Prints the statistics of a timeseries to stdout
  *
  * @param timeseries  The timeseries to print
  */
 void timeseries_print_stats(const struct Timeseries* timeseries);
+
+/**
+ * Prints the interpolations of a timeseries to stdout
+ *
+ * @param timeseries  The timeseries to print
+ */
+void timeseries_print_interpolations(const struct Timeseries* timeseries);
 
 /**
  * Prints the observations of a timeseries to stdout

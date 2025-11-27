@@ -1,4 +1,4 @@
-tests = test_tempo test_input test_describe test_show test_memory
+tests = test_tempo test_input test_interpolate test_describe test_show test_memory
 
 .PHONY: test
 

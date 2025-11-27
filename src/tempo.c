@@ -7,12 +7,13 @@
 // Constants
 // ---------
 
-#define HELP "Usage: tempo SUBCOMMAND\n\
+#define HELP "Usage: tempo SUBCOMMAND [options]\n\
 Displays information about a timeseries.\n\
 \n\
 SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
   help: shows this message\n\
+  interpolate: list the interpolations of the timeseries\n\
   show: list the observations of the timeseries\n\
 \n\
 A timeseries is a text stream that must satisfy the following syntax:\n\
@@ -80,6 +81,16 @@ void run_describe(void) {
 }
 
 /**
+ * Runs the 'interpolate' subcommand
+ */
+void run_interpolate(void) {
+  struct Timeseries timeseries;
+  timeseries_initialize_from_stdin(&timeseries);
+  timeseries_print_interpolations(&timeseries);
+  timeseries_delete(&timeseries);
+}
+
+/**
  * Runs the 'show' subcommand
  */
 void run_show(void) {
@@ -108,11 +119,14 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(subcommand, "help") == 0) {
       check_if_too_many_arguments(argc, "help");
       printf(HELP);
+    } else if (strcmp(subcommand, "interpolate") == 0) {
+      run_interpolate();
     } else if (strcmp(subcommand, "show") == 0) {
       check_if_too_many_arguments(argc, "show");
       run_show();
-    } else
+    } else {
       report_unrecognized_subcommand(subcommand);
+    }
     return 0;
   }
   fprintf(stderr, "error: subcommand is mandatory\n");

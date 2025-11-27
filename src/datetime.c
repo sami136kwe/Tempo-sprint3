@@ -96,6 +96,16 @@ void datetime_initialize(struct Datetime* datetime,
   strcpy(datetime->rfc3339_string, "");
 }
 
+int datetime_compare(const struct Datetime* datetime1,
+                     const struct Datetime* datetime2) {
+  if (datetime1->t < datetime2->t)
+    return -1;
+  else if (datetime1->t > datetime2->t)
+    return 1;
+  else
+    return 0;
+}
+
 struct Datetime datetime_copy(const struct Datetime* datetime) {
   struct Datetime copy;
   copy.t = datetime->t;
