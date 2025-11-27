@@ -92,9 +92,6 @@ unsigned int timeseries_amplitude(const struct Timeseries* timeseries);
 /**
  * Returns the interpolation of the timeseries at the given datetime
  *
- * Note: If the datetime is outside the timeseries datetimes, an error is
- * reported on stderr and the program stops.
- *
  * @param timeseries  The queried timeseries
  * @param datetime    The datetime
  * @return            The interpolation
