@@ -250,14 +250,15 @@ void timeseries_print_stats(const struct Timeseries* timeseries) {
   printf("Amplitude: %d\n", timeseries_amplitude(timeseries));
 }
 
-void timeseries_print_interpolations(const struct Timeseries* timeseries) {
+void timeseries_print_interpolations(const struct Timeseries* timeseries,
+                                     unsigned int step) {
   if (timeseries->size == 0)
     report_cannot_interpolate_empty_timeseries();
   struct Datetime datetime = datetime_copy(&timeseries->start_datetime);
   do {
     printf("%s %d\n", datetime_to_rfc3339_string(&datetime),
                       timeseries_interpolation(timeseries, &datetime));
-    datetime_add_seconds(&datetime, 1);
+    datetime_add_seconds(&datetime, (int)step);
   } while (datetime_compare(&datetime, &timeseries->last_datetime) <= 0);
 }
 

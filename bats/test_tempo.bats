@@ -35,6 +35,11 @@ setup() {
   assert_line --partial "  interpolate:"
 }
 
+@test "tempo help mentions the -s|--step option" {
+  run tempo help
+  assert_line --partial "    -s|--step DURATION:"
+}
+
 @test "tempo help mentions the show subcommand" {
   run tempo help
   assert_line --partial "  show:"

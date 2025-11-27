@@ -14,6 +14,7 @@ SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
   help: shows this message\n\
   interpolate: list the interpolations of the timeseries\n\
+    -s|--step DURATION: the duration of each interpolation step\n\
   show: list the observations of the timeseries\n\
 \n\
 A timeseries is a text stream that must satisfy the following syntax:\n\
@@ -33,8 +34,8 @@ A timeseries is a text stream that must satisfy the following syntax:\n\
                   with respect to the reference datetime and\n\
            VALUE is an integer\n"
 
-// Validation
-// ----------
+// Reporting errors
+// ----------------
 
 /**
  * Reports that an unrecognized subcommand has been provided
@@ -67,8 +68,28 @@ void check_if_too_many_arguments(int argc, const char* subcommand) {
     report_too_many_arguments(subcommand);
 }
 
-// Help functions
-// --------------
+/**
+ * Reports that some option was expected
+ *
+ * @param option  The expected option
+ */
+void report_wrong_option(const char* option) {
+  fprintf(stderr, "error: expected %s option\n", option);
+  exit(1);
+}
+
+/**
+ * Reports that an invalid format duration was provided
+ *
+ * @param s  The string that was provided
+ */
+void report_invalid_format_duration(const char* s) {
+  fprintf(stderr, "error: invalid duration format (%s)\n", s);
+  exit(1);
+}
+
+// Subcommands
+// -----------
 
 /**
  * Runs the 'describe' subcommand
@@ -81,12 +102,41 @@ void run_describe(void) {
 }
 
 /**
- * Runs the 'interpolate' subcommand
+ * Retrieves the interpolation step from argc and argv
+ *
+ * @param argc  The argument count
+ * @param argv  The argument values
+ * @return      The interpolation step
  */
-void run_interpolate(void) {
+unsigned int interpolation_step(int argc, char* argv[]) {
+  if (argc == 2)
+    return 1;
+  if (argc >= 3 && strcmp(argv[2], "-s") != 0 && strcmp(argv[2], "--step") != 0)
+    report_wrong_option("-s or --step");
+  if (argc >= 5)
+    report_too_many_arguments(argv[1]);
+  unsigned int step;
+  const char* string_duration = argv[3];
+  char unit;
+  if (sscanf(string_duration, "%u%c", &step, &unit) != 2 ||
+      (unit != 's' && unit != 'm' && unit != 'h'))
+    report_invalid_format_duration(string_duration);
+  if (unit == 'm')
+    step *= 60;
+  else if (unit == 'h')
+    step *= 3600;
+  return step;
+}
+
+/**
+ * Runs the 'interpolate' subcommand
+ *
+ * @param step  The interpolation step (in seconds)
+ */
+void run_interpolate(unsigned int step) {
   struct Timeseries timeseries;
   timeseries_initialize_from_stdin(&timeseries);
-  timeseries_print_interpolations(&timeseries);
+  timeseries_print_interpolations(&timeseries, step);
   timeseries_delete(&timeseries);
 }
 
@@ -120,7 +170,8 @@ int main(int argc, char *argv[]) {
       check_if_too_many_arguments(argc, "help");
       printf(HELP);
     } else if (strcmp(subcommand, "interpolate") == 0) {
-      run_interpolate();
+      unsigned int step = interpolation_step(argc, argv);
+      run_interpolate(step);
     } else if (strcmp(subcommand, "show") == 0) {
       check_if_too_many_arguments(argc, "show");
       run_show();
