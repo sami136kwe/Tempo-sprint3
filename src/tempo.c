@@ -32,6 +32,40 @@ A timeseries is a text stream that must satisfy the following syntax:\n\
                   with respect to the reference datetime and\n\
            VALUE is an integer\n"
 
+// Validation
+// ----------
+
+/**
+ * Reports that an unrecognized subcommand has been provided
+ *
+ * @param subcommand  The provided subcommand
+ */
+void report_unrecognized_subcommand(const char* subcommand) {
+  fprintf(stderr, "error: unrecognized subcommand '%s'", subcommand);
+  exit(1);
+}
+
+/**
+ * Reports that too many arguments have been provided
+ *
+ * @param subcommand  The provided subcommand
+ */
+void report_too_many_arguments(const char* subcommand) {
+  fprintf(stderr, "error: too many arguments to '%s' subcommand", subcommand);
+  exit(1);
+}
+
+/**
+ * Checks if too many arguments have been provided
+ *
+ * @param argc        The number of arguments
+ * @param subcommand  The provided subcommand
+ */
+void check_if_too_many_arguments(int argc, const char* subcommand) {
+  if (argc >= 3)
+    report_too_many_arguments(subcommand);
+}
+
 // Help functions
 // --------------
 
@@ -55,16 +89,6 @@ void run_show(void) {
   timeseries_delete(&timeseries);
 }
 
-/**
- * Reports that an unrecognized subcommand has been provided
- *
- * @param subcommand  The provided subcommand
- */
-void report_unrecognized_subcommand(const char* subcommand) {
-  fprintf(stderr, "error: unrecognized subcommand '%s'", subcommand);
-  exit(1);
-}
-
 // Main
 // ----
 
@@ -78,13 +102,16 @@ void report_unrecognized_subcommand(const char* subcommand) {
 int main(int argc, char *argv[]) {
   if (argc >= 2) {
     const char* subcommand = argv[1];
-    if (strcmp(subcommand, "describe") == 0)
+    if (strcmp(subcommand, "describe") == 0) {
+      check_if_too_many_arguments(argc, "describe");
       run_describe();
-    else if (strcmp(subcommand, "help") == 0)
+    } else if (strcmp(subcommand, "help") == 0) {
+      check_if_too_many_arguments(argc, "help");
       printf(HELP);
-    else if (strcmp(subcommand, "show") == 0)
+    } else if (strcmp(subcommand, "show") == 0) {
+      check_if_too_many_arguments(argc, "show");
       run_show();
-    else
+    } else
       report_unrecognized_subcommand(subcommand);
     return 0;
   }
