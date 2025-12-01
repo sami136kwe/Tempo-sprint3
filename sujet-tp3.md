@@ -181,7 +181,7 @@ Gnuplot, mais seulement produire le script sur la sortie standard.
 On s'attend donc au comportement suivant:
 
 ```
-# On utilise tempo pour sauvegarder le script dans plot-timeseries
+# On utilise tempo pour sauvegarder le script dans plot-timeseries.gp
 $ tempo gnuplot < examples/6.ts > plot-timeseries.gp
 # On appelle le script
 $ gnuplot -e "set output 'timeseries.png'" plot-timeseries.gp
