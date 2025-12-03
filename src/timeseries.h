@@ -121,5 +121,36 @@ void timeseries_print_interpolations(const struct Timeseries* timeseries,
  * @param timeseries  The timeseries to print
  */
 void timeseries_print_observations(const struct Timeseries* timeseries);
+/**
+ * Returns the index of an offset in a given timeseries
+ *
+ * If the offset does not belong to the timeseries, returns -1.
+ *
+ * @param timeseries  The timeseries to query
+ * @param offset      The searched offset
+ * @return            The index of the offset or -1
+ */
+int timeseries_offset_index(const struct Timeseries* timeseries, int offset);
 
+/**
+ * Adds an observation to a timeseries
+ *
+ * If the timeseries already has an observation with the same offset, the
+ * associated value is overwritten. Observations are maintained in sorted
+ * order by offset.
+ *
+ * @param timeseries  The timeseries to update
+ * @param offset      The offset of the observation (in seconds from start)
+ * @param value       The value of the observation
+ */
+void timeseries_add_observation(struct Timeseries* timeseries,
+                                int offset,
+                                int value);
+
+/**
+ * Sets the last datetime of the timeseries based on the maximum offset
+ *
+ * @param timeseries  The timeseries to update
+ */
+void timeseries_set_last_datetime(struct Timeseries* timeseries);
 #endif
