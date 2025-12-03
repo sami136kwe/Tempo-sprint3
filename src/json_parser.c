@@ -6,11 +6,18 @@
 #include "datetime.h"
 #include "timeseries.h"
 
+
+/**
+ * Reports a JSON parse error and exits
+ */
 void report_json_parse_error(const char* message) {
   fprintf(stderr, "error: JSON parse error (%s)\n", message);
   exit(2);
 }
 
+/**
+ * Reports a missing field in the JSON and exits
+ */ 
 void report_json_missing_field(const char* field) {
   fprintf(stderr, "error: missing required field '%s'\n", field);
   exit(2);
@@ -34,6 +41,12 @@ int json_validate_structure(json_t* root) {
   return 1;
 }
 
+/**
+ * Parses the "origin" field from the JSON and sets the start datetime
+ *
+ * @param root        The root JSON object
+ * @param timeseries  The timeseries to update
+*/
 void json_parse_origin(json_t* root, struct Timeseries* timeseries) {
   json_t* origin = json_object_get(root, "origin");
   if (!origin) {
@@ -51,6 +64,12 @@ void json_parse_origin(json_t* root, struct Timeseries* timeseries) {
   }
 }
 
+/**
+ * Parses the "observations" array from the JSON and adds observations
+ *
+ * @param root        The root JSON object
+ * @param timeseries  The timeseries to update
+*/
 void json_parse_observations(json_t* root, struct Timeseries* timeseries) {
   json_t* observations = json_object_get(root, "observations");
   if (!observations) {
