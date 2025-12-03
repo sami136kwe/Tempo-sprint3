@@ -1,5 +1,9 @@
 image: registry.gitlab.info.uqam.ca/inf31351/docker/base
 
+before_script:
+  - apt-get update -qq
+  - apt-get install -y -qq libjansson-dev pkg-config
+  
 stages:
   - build
   - test
