@@ -18,30 +18,30 @@ objects = datetime.o timeseries.o utils.o validation.o json_parser.o
 build: $(exec)
 
 $(exec): $(exec).o $(objects)
-	gcc $(lflags) -o $@ $^
+	gcc -o $@ $^ $(lflags)
 	mkdir -p bin
 	cp $(exec) bin/
 
 $(exec).o: $(exec).c
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 datetime.o: datetime.c datetime.h
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 timeseries.o: timeseries.c timeseries.h
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 utils.o: utils.c utils.h
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 validation.o: validation.c validation.h
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 json_parser.o: json_parser.c json_parser.h
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 test_datetime.o: test_datetime.c
-	gcc $(cflags) -c -o $@ $<
+	gcc $(cflags) -c -o $@ $
 
 test_datetime: test_datetime.o datetime.o validation.o utils.o
 	gcc -o $@ $^ $(lflags)
