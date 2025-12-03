@@ -16,6 +16,8 @@ Displays information about a timeseries.\n\
 SUBCOMMAND is mandatory and must take one of the following values:\n\
   describe: describes the timeseries\n\
     -J|--from-json: read timeseries from JSON format\n\
+  gnuplot: generates a Gnuplot script for plotting the timeseries\n\
+    -J|--from-json: read timeseries from JSON format\n\
   help: shows this message\n\
   interpolate: list the interpolations of the timeseries\n\
     -J|--from-json: read timeseries from JSON format\n\
@@ -150,6 +152,20 @@ void run_show(int from_json) {
   timeseries_delete(&timeseries);
 }
 
+/**
+ * Runs the 'gnuplot' subcommand
+ */
+void run_gnuplot(int from_json) {
+  struct Timeseries timeseries;
+  if (from_json) {
+    json_parse_timeseries_from_stdin(&timeseries);
+  } else {
+    timeseries_initialize_from_stdin(&timeseries);
+  }
+  timeseries_print_gnuplot_script(&timeseries);
+  timeseries_delete(&timeseries);
+}
+
 // Main
 // ----
 
@@ -188,7 +204,15 @@ int main(int argc, char *argv[]) {
       report_too_many_arguments("show");
     }
     run_show(from_json);
-  } else {
+  } else if (strcmp(subcommand, "gnuplot") == 0) {
+    int from_json = has_json_option(argc, argv, 2);
+    if (from_json && argc > 3) {
+      report_too_many_arguments("gnuplot");
+    } else if (!from_json && argc > 2) {
+      report_too_many_arguments("gnuplot");
+    }
+    run_gnuplot(from_json);
+  }else {
     report_unrecognized_subcommand(subcommand);
   }
   

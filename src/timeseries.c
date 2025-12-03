@@ -241,3 +241,24 @@ void timeseries_print_observations(const struct Timeseries* timeseries) {
     datetime_delete(&datetime);
   }
 }
+
+void timeseries_print_gnuplot_script(const struct Timeseries* timeseries) {
+  printf("set terminal png size 800,600\n");
+  printf("set xlabel 'Time'\n");
+  printf("set ylabel 'Value'\n");
+  printf("set title 'Time Series'\n");
+  printf("set xdata time\n");
+  printf("set timefmt '%%Y-%%m-%%dT%%H:%%M:%%S'\n");
+  printf("set format x '%%Y-%%m-%%d\\n%%H:%%M:%%S'\n");
+  printf("set grid\n");
+  printf("set key off\n");
+  printf("plot '-' using 1:2 with linespoints\n");
+  for (size_t i = 0; i < timeseries->size; ++i) {
+    struct Datetime datetime = datetime_copy(&timeseries->start_datetime);
+    datetime_add_seconds(&datetime, timeseries->offsets[i]);
+    printf("%s %d\n", datetime_to_rfc3339_string(&datetime),
+                      timeseries->values[i]);
+    datetime_delete(&datetime);
+  }
+  printf("e\n");
+}

@@ -143,4 +143,11 @@ void timeseries_print_interpolations(const struct Timeseries* timeseries,
  */
 void timeseries_print_observations(const struct Timeseries* timeseries);
 
+/**
+ * Prints a Gnuplot script for plotting the timeseries to stdout
+ *
+ * @param timeseries  The timeseries to plot
+ */
+void timeseries_print_gnuplot_script(const struct Timeseries* timeseries);
+
 #endif
