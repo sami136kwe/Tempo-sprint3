@@ -1,3 +1,4 @@
+# Configuration Jansson
 JANSSON_CFLAGS = $(shell pkg-config --cflags jansson)
 JANSSON_LIBS = $(shell pkg-config --libs jansson)
 
@@ -6,7 +7,9 @@ cflags = -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion \
          -Wstrict-prototypes -Wlogical-op -Wduplicated-cond \
 				 -Wduplicated-branches -Wnull-dereference -Wjump-misses-init \
 				 -fanalyzer $(shell pkg-config --cflags tap) $(JANSSON_CFLAGS)
+
 lflags = $(shell pkg-config --libs tap) $(JANSSON_LIBS)
+
 exec = tempo
 objects = datetime.o timeseries.o utils.o validation.o json_parser.o
 
