@@ -23,25 +23,25 @@ $(exec): $(exec).o $(objects)
 	cp $(exec) bin/
 
 $(exec).o: $(exec).c
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 datetime.o: datetime.c datetime.h
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 timeseries.o: timeseries.c timeseries.h
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 utils.o: utils.c utils.h
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 validation.o: validation.c validation.h
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 json_parser.o: json_parser.c json_parser.h
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 test_datetime.o: test_datetime.c
-	gcc $(cflags) -c -o $@ $
+	gcc $(cflags) -c -o $@ $<
 
 test_datetime: test_datetime.o datetime.o validation.o utils.o
 	gcc -o $@ $^ $(lflags)
