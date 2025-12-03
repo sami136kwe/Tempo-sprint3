@@ -1,4 +1,3 @@
-# Configuration Jansson
 JANSSON_CFLAGS = $(shell pkg-config --cflags jansson)
 JANSSON_LIBS = $(shell pkg-config --libs jansson)
 
