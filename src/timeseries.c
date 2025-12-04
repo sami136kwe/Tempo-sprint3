@@ -244,6 +244,7 @@ void timeseries_print_observations(const struct Timeseries* timeseries) {
 
 void timeseries_print_gnuplot_script(const struct Timeseries* timeseries) {
   printf("set terminal png size 800,600\n");
+  printf("set output 'output.png'\n"); 
   printf("set xlabel 'Time'\n");
   printf("set ylabel 'Value'\n");
   printf("set title 'Time Series'\n");
