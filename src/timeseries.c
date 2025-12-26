@@ -195,10 +195,12 @@ int timeseries_interpolation(const struct Timeseries* timeseries,
     report_cannot_interpolate_outside_of_range();
   int offset = datetime_diff(&timeseries->start_datetime, datetime);
   size_t i = 0;
-  while (timeseries->offsets[i] < offset)
+  while (i < timeseries->size && timeseries->offsets[i] < offset)
     ++i;
-  if (timeseries->offsets[i] == offset)
+  if (i < timeseries->size && timeseries->offsets[i] == offset)
     return timeseries->values[i];
+  if (i == 0 || i >= timeseries->size)
+    report_cannot_interpolate_outside_of_range();
   double p = (double)(offset - timeseries->offsets[i - 1])
              /
              (double)(timeseries->offsets[i] - timeseries->offsets[i - 1]);
