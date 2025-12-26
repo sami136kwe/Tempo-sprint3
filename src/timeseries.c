@@ -66,44 +66,6 @@ int timeseries_offset_index(const struct Timeseries* timeseries,
 }
 
 /**
- * Adds an observation to a timeseries
- *
- * If the timeseries already has an observation with the same offset, the
- * associated values is overwritten.
- *
- * @param timeseries  The timeseries to update
- * @param offset      The offset of the observation
- * @param value       The value of the observation
- */
-void timeseries_add_observation(struct Timeseries* timeseries,
-                                int offset,
-                                int value) {
-  int idx = timeseries_offset_index(timeseries, offset);
-  size_t i;
-  if (idx == -1) {
-    if (timeseries->size == timeseries->capacity) {
-      timeseries->capacity *= 2;
-      timeseries->offsets = realloc(timeseries->offsets,
-                                    timeseries->capacity * sizeof(int));
-      timeseries->values = realloc(timeseries->values,
-                                   timeseries->capacity * sizeof(int));
-      check_out_of_memory(timeseries);
-    }
-    i = timeseries->size;
-    while (i > 0 && offset < timeseries->offsets[i - 1]) {
-      timeseries->offsets[i] = timeseries->offsets[i - 1];
-      timeseries->values[i] = timeseries->values[i - 1];
-      --i;
-    }
-    ++timeseries->size;
-  } else {
-    i = (size_t)idx;
-  }
-  timeseries->offsets[i] = offset;
-  timeseries->values[i] = value;
-}
-
-/**
  * Set the observations of the timeseries from stdin
  *
  * @param timeseries  The timeseries to set
@@ -154,6 +116,34 @@ void timeseries_initialize_from_stdin(struct Timeseries* timeseries) {
   timeseries_set_start_datetime_from_stdin(timeseries);
   timeseries_set_observations_from_stdin(timeseries);
   timeseries_set_last_datetime(timeseries);
+}
+
+void timeseries_add_observation(struct Timeseries* timeseries,
+                                int offset,
+                                int value) {
+  int idx = timeseries_offset_index(timeseries, offset);
+  size_t i;
+  if (idx == -1) {
+    if (timeseries->size == timeseries->capacity) {
+      timeseries->capacity *= 2;
+      timeseries->offsets = realloc(timeseries->offsets,
+                                    timeseries->capacity * sizeof(int));
+      timeseries->values = realloc(timeseries->values,
+                                   timeseries->capacity * sizeof(int));
+      check_out_of_memory(timeseries);
+    }
+    i = timeseries->size;
+    while (i > 0 && offset < timeseries->offsets[i - 1]) {
+      timeseries->offsets[i] = timeseries->offsets[i - 1];
+      timeseries->values[i] = timeseries->values[i - 1];
+      --i;
+    }
+    ++timeseries->size;
+  } else {
+    i = (size_t)idx;
+  }
+  timeseries->offsets[i] = offset;
+  timeseries->values[i] = value;
 }
 
 void timeseries_delete(struct Timeseries* timeseries) {

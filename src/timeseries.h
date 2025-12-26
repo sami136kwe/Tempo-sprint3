@@ -43,6 +43,20 @@ void timeseries_initialize(struct Timeseries* timeseries);
 void timeseries_initialize_from_stdin(struct Timeseries* timeseries);
 
 /**
+ * Adds an observation to a timeseries
+ *
+ * If the timeseries already has an observation with the same offset, the
+ * associated values is overwritten.
+ *
+ * @param timeseries  The timeseries to update
+ * @param offset      The offset of the observation
+ * @param value       The value of the observation
+ */
+void timeseries_add_observation(struct Timeseries* timeseries,
+                                int offset,
+                                int value);
+
+/**
  * Deletes a timeseries
  *
  * @param timeseries  The timeseries to delete

@@ -87,10 +87,37 @@ La première tâche consiste à ajouter des tests unitaires pour le module
 [Libtap](https://github.com/zorgnax/libtap), en vous inspirant des tests déjà
 existants pour le module `datetime`.
 
-Les tests ajoutés devraient minimalement couvrir toutes les fonctions publiques
-introduites par le module `timeseries`. Il faut également mettre à jour les
-fichiers Makefiles correspondants afin que les tests soient exécutés lorsqu'on
-entre les commandes `make test-libtap` et `make test`.
+Les tests ajoutés devraient minimalement couvrir (ou appeler) les fonctions
+publiques suivantes:
+
+```c
+void timeseries_initialize(struct Timeseries* timeseries);
+void timeseries_add_observation(struct Timeseries* timeseries,
+                                int offset,
+                                int value);
+void timeseries_delete(struct Timeseries* timeseries);
+int timeseries_min_value(const struct Timeseries* timeseries);
+int timeseries_max_value(const struct Timeseries* timeseries);
+unsigned int timeseries_duration(const struct Timeseries* timeseries);
+unsigned int timeseries_amplitude(const struct Timeseries* timeseries);
+int timeseries_interpolation(const struct Timeseries* timeseries,
+                             const struct Datetime* datetime);
+```
+
+Les fonctions publiques suivantes n'ont pas à être testées avec Libtap, car
+elles le sont déjà par les tests fonctionnels (Bats):
+
+```c
+void timeseries_initialize_from_stdin(struct Timeseries* timeseries);
+void timeseries_print_stats(const struct Timeseries* timeseries);
+void timeseries_print_interpolations(const struct Timeseries* timeseries,
+                                     unsigned int step);
+void timeseries_print_observations(const struct Timeseries* timeseries);
+```
+
+Il faut également mettre à jour les fichiers Makefiles correspondants afin que
+les tests soient exécutés lorsqu'on entre les commandes `make test-libtap` et
+`make test`.
 
 Plus spécifiquement, vous devez minimalement apporter les modifications
 suivantes, en plaçant tous vos *commits* sur la branche
