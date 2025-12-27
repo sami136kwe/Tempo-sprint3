@@ -1,8 +1,10 @@
 image: registry.gitlab.info.uqam.ca/inf31351/docker/base
 
 before_script:
-  - apt-get update -qq
-  - apt-get install -y -qq libjansson-dev pkg-config libtap-dev gnuplot bats
+  - apt-get update -qq || true
+  - apt-get install -y -qq libjansson-dev pkg-config gnuplot git
+  - git clone --depth 1 https://github.com/zorgnax/libtap.git && cd libtap && make && make install && ldconfig && cd ..
+  - git clone --depth 1 https://github.com/bats-core/bats-core.git && bats-core/install.sh /usr/local
   
 stages:
   - build
