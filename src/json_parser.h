@@ -5,17 +5,17 @@
 #include "timeseries.h"
 
 /**
- * Parse une série temporelle depuis un flux JSON
+ * Parse a time series from a JSON stream
  *
- * @param timeseries  La série temporelle à initialiser
+ * @param timeseries  The time series to initializer
  */
 void json_parse_timeseries_from_stdin(struct Timeseries* timeseries);
 
 /**
- * Valide la structure d'un objet JSON de série temporelle
+ * Validate the structure of a JSON time series object
  *
- * @param root  L'objet JSON racine
- * @return      1 si valide, 0 sinon
+ * @param root  The root JSON object
+ * @return      1 if valid, 0 otherwise
  */
 int json_validate_structure(json_t* root);
 

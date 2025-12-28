@@ -4,6 +4,10 @@ default:
   tags:
     - calcul_runner1
 
+default:
+  tags:
+    - calcul_runner1
+
 stages:
   - build
   - test
@@ -38,3 +42,4 @@ test-libtap:
   stage: test
   script:
     - make test-libtap
+    
