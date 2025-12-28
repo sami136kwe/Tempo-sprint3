@@ -12,6 +12,7 @@ before_script:
     - apt update
     - apt install -y curl
     - apt install -y m4
+    - apt install -y gnuplot
     - curl -L -o jansson.tar.gz https://digip.org/jansson/releases/jansson-2.13.tar.gz
     - tar -xzf jansson.tar.gz
     - cd jansson-2.13
