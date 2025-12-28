@@ -9,6 +9,7 @@ stages:
   - test
 
 before_script:
+
   - apt update
   
   - apt install -y curl git make gcc libc-bin pkg-config m4
@@ -23,7 +24,7 @@ before_script:
   - make install
   - cd ..
   
-
+  - rm -rf /tmp/libtap
   - git clone https://github.com/zorgnax/libtap /tmp/libtap
   - cd /tmp/libtap
   - make
@@ -49,3 +50,4 @@ test-libtap:
   stage: test
   script:
     - make test-libtap
+  
