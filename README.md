@@ -144,6 +144,8 @@ Displays information about a timeseries.
 SUBCOMMAND is mandatory and must take one of the following values:
   describe: describes the timeseries
     -J|--from-json: read timeseries from JSON format
+  gnuplot: generates a Gnuplot script for plotting the timeseries
+    -J|--from-json: read timeseries from JSON format
   help: shows this message
   interpolate: list the interpolations of the timeseries
     -J|--from-json: read timeseries from JSON format
@@ -379,3 +381,60 @@ $ sudo make install
 ```
 
 Une fois Jansson installé, vous pouvez compiler l'application normalement avec `make`.
+
+## La sous-commande `gnuplot`
+
+La sous-commande `gnuplot` génère un script [Gnuplot](http://www.gnuplot.info/) valide sur la sortie standard, permettant de tracer un graphique de la série temporelle.
+
+### Utilisation de base
+
+La façon la plus simple de générer un graphique :
+
+```sh
+$ bin/tempo gnuplot < examples/6.ts | gnuplot
+```
+
+Cette commande crée directement le fichier `timeseries.png` contenant le graphique de la série temporelle.
+
+### Personnalisation du fichier de sortie
+
+Pour spécifier un nom de fichier différent :
+
+```sh
+$ bin/tempo gnuplot < examples/6.ts | gnuplot -e "set output 'mon-graphique.png'"
+```
+
+### Sauvegarder le script
+
+Si vous souhaitez conserver le script pour le réutiliser ou le modifier :
+
+```sh
+$ bin/tempo gnuplot < examples/6.ts > plot-timeseries.gp
+$ gnuplot plot-timeseries.gp
+```
+
+### Support du format JSON
+
+Comme pour les autres sous-commandes, `gnuplot` supporte l'option `-J|--from-json` :
+
+```sh
+$ bin/tempo gnuplot -J < serie.json | gnuplot
+$ bin/tempo gnuplot --from-json < serie.json | gnuplot -e "set output 'graph.png'"
+```
+
+### Format du graphique généré
+
+Le graphique créé affiche :
+* Les observations sous forme de points orange
+* L'axe des abscisses (X) représentant le temps au format ISO8601
+* L'axe des ordonnées (Y) représentant les valeurs observées
+* Un format de sortie PNG
+
+### Dépendances
+
+Pour utiliser cette sous-commande, [Gnuplot](http://www.gnuplot.info/) doit être installé sur le système :
+
+```sh
+$ sudo apt-get update
+$ sudo apt-get install gnuplot
+```
