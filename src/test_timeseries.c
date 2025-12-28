@@ -358,9 +358,6 @@ void test_timeseries_interpolation(void) {
  * - BUG #2: Accessing offsets[i] when i >= size
  * - BUG #3: Accessing offsets[i-1] when i == 0
  *
- * These tests are skipped in the automated run to prevent crashes, but should
- * be tested manually or with proper error handling (Bats tests).
- *
  * Verifies that:
  * - Interpolation at first observation works (even when offset != 0)
  * - Interpolation at last observation works
@@ -537,7 +534,7 @@ void test_timeseries_negative_values(void) {
   cmp_ok(timeseries_min_value(&ts), "==", -100, "Min value with negatives");
   cmp_ok(timeseries_max_value(&ts), "==", -50, "Max value with negatives");
   cmp_ok((int)timeseries_amplitude(&ts), "==", 50, "Amplitude with negatives");
-  
+
   timeseries_delete(&ts);
 }
 
