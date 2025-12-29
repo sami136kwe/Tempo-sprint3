@@ -64,6 +64,27 @@ void timeseries_add_observation(struct Timeseries* timeseries,
 void timeseries_delete(struct Timeseries* timeseries);
 
 /**
+ * Adds an observation to a timeseries
+ *
+ * If the timeseries already has an observation with the same offset, the
+ * associated value is overwritten.
+ *
+ * @param timeseries  The timeseries to update
+ * @param offset      The offset of the observation
+ * @param value       The value of the observation
+ */
+void timeseries_add_observation(struct Timeseries* timeseries,
+                                int offset,
+                                int value);
+
+/**
+ * Set the last datetime of the timeseries
+ *
+ * @param timeseries  The timeseries to set
+ */
+void timeseries_set_last_datetime(struct Timeseries* timeseries);
+
+/**
  * Returns the minimum value of the timeseries
  *
  * Note: If the timeseries is empty, returns INT_MAX.
@@ -135,5 +156,12 @@ void timeseries_print_interpolations(const struct Timeseries* timeseries,
  * @param timeseries  The timeseries to print
  */
 void timeseries_print_observations(const struct Timeseries* timeseries);
+
+/**
+ * Prints a Gnuplot script for plotting the timeseries to stdout
+ *
+ * @param timeseries  The timeseries to plot
+ */
+void timeseries_print_gnuplot_script(const struct Timeseries* timeseries);
 
 #endif

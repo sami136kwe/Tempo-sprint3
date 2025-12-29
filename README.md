@@ -138,13 +138,20 @@ d'utilisation s'affiche sur la sortie standard:
 
 ```text
 $ bin/tempo help
-Usage: tempo SUBCOMMAND
+Usage: tempo SUBCOMMAND [options]
 Displays information about a timeseries.
 
 SUBCOMMAND is mandatory and must take one of the following values:
   describe: describes the timeseries
+    -J|--from-json: read timeseries from JSON format
+  gnuplot: generates a Gnuplot script for plotting the timeseries
+    -J|--from-json: read timeseries from JSON format
   help: shows this message
+  interpolate: list the interpolations of the timeseries
+    -J|--from-json: read timeseries from JSON format
+    -s|--step DURATION: the duration of each interpolation step
   show: list the observations of the timeseries
+    -J|--from-json: read timeseries from JSON format
 
 A timeseries is a text stream that must satisfy the following syntax:
 
@@ -162,6 +169,10 @@ A timeseries is a text stream that must satisfy the following syntax:
      where OFFSET is a positive integer indicating the number of seconds offset
                   with respect to the reference datetime and
            VALUE is an integer
+
+When using -J|--from-json, the input must be a JSON object with:
+  - "origin": a string with format YYYY-mm-DDTHH:MM:SS
+  - "observations": an array of objects with "offset" and "value" fields
 ```
 
 ## La sous-commande `show`
@@ -258,4 +269,172 @@ $ bin/tempo interpolate -s 4s < examples/3_10s.ts
 2025-09-01T09:00:00 10
 2025-09-01T09:00:04 18
 2025-09-01T09:00:08 17
+```
+
+## Support du format JSON
+
+En plus du format texte standard, les sous-commandes `describe`, `show` et `interpolate` supportent l'option `-J|--from-json` pour lire des séries temporelles au format JSON.
+
+### Format JSON
+
+Une série temporelle peut être représentée au format JSON avec la structure suivante :
+
+```json
+{
+  "origin": "2025-09-01T00:00:00",
+  "observations": [
+    {"offset": 0, "value": 10},
+    {"offset": 28800, "value": 40},
+    {"offset": 57600, "value": 15},
+    {"offset": 86400, "value": 35},
+    {"offset": 115200, "value": 50},
+    {"offset": 144000, "value": 25}
+  ]
+}
+```
+
+Où :
+* `"origin"` : une chaîne de caractères contenant l'horodate de référence au format `YYYY-mm-DDTHH:MM:SS`
+* `"observations"` : un tableau d'objets, où chaque objet contient :
+  * `"offset"` : un entier non négatif représentant le décalage en secondes par rapport à l'horodate de référence
+  * `"value"` : un entier représentant la valeur observée
+
+Cette représentation JSON est équivalente au format texte suivant :
+
+```
+2025-09-01T00:00:00
+0 10
+28800 40
+57600 15
+86400 35
+115200 50
+144000 25
+```
+
+### Exemples d'utilisation
+
+#### Afficher les statistiques d'une série temporelle JSON
+
+```sh
+$ bin/tempo describe -J < serie.json
+Domain: [2025-09-01T00:00:00, 2025-09-02T16:00:00]
+Codomain: [10, 50]
+Size: 6
+Duration: 144000
+Amplitude: 40
+```
+
+#### Afficher les observations d'une série temporelle JSON
+
+```sh
+$ bin/tempo show --from-json < serie.json
+2025-09-01T00:00:00 10
+2025-09-01T08:00:00 40
+2025-09-01T16:00:00 15
+2025-09-02T00:00:00 35
+2025-09-02T08:00:00 50
+2025-09-02T16:00:00 25
+```
+
+#### Interpoler une série temporelle JSON
+
+```sh
+$ bin/tempo interpolate -J -s 1h < serie.json
+2025-09-01T00:00:00 10
+2025-09-01T01:00:00 11
+2025-09-01T02:00:00 13
+...
+```
+
+Les options `-J` et `--from-json` sont interchangeables et peuvent être combinées avec d'autres options. Par exemple :
+
+```sh
+# L'ordre des options est flexible
+$ bin/tempo interpolate -s 8h -J < serie.json
+$ bin/tempo interpolate -J -s 8h < serie.json
+
+# Forme courte et forme longue
+$ bin/tempo describe -J < serie.json
+$ bin/tempo describe --from-json < serie.json
+```
+
+### Dépendances supplémentaires
+
+Le support du format JSON nécessite la bibliothèque [Jansson](https://github.com/akheron/jansson).
+
+#### Installation sur Ubuntu/Debian
+
+```sh
+$ sudo apt-get update
+$ sudo apt-get install libjansson-dev
+```
+
+#### Installation depuis les sources
+
+```sh
+$ curl -L -o jansson.tar.gz https://digip.org/jansson/releases/jansson-2.13.tar.gz
+$ tar -xzf jansson.tar.gz
+$ cd jansson-2.13
+$ ./configure
+$ make
+$ sudo make install
+```
+
+Une fois Jansson installé, vous pouvez compiler l'application normalement avec `make`.
+
+## La sous-commande `gnuplot`
+
+La sous-commande `gnuplot` génère un script [Gnuplot](http://www.gnuplot.info/) valide sur la sortie standard, permettant de tracer un graphique de la série temporelle.
+
+### Utilisation de base
+
+La façon la plus simple de générer un graphique :
+
+```sh
+$ bin/tempo gnuplot < examples/6.ts | gnuplot
+```
+
+Cette commande crée directement le fichier `timeseries.png` contenant le graphique de la série temporelle.
+
+### Personnalisation du fichier de sortie
+
+Pour spécifier un nom de fichier différent :
+
+```sh
+$ bin/tempo gnuplot < examples/6.ts | gnuplot -e "set output 'mon-graphique.png'"
+```
+
+### Sauvegarder le script
+
+Si vous souhaitez conserver le script pour le réutiliser ou le modifier :
+
+```sh
+$ bin/tempo gnuplot < examples/6.ts > plot-timeseries.gp
+$ gnuplot plot-timeseries.gp
+```
+
+### Support du format JSON
+
+Comme pour les autres sous-commandes, `gnuplot` supporte l'option `-J|--from-json` :
+
+```sh
+$ bin/tempo gnuplot -J < serie.json | gnuplot
+$ bin/tempo gnuplot --from-json < serie.json | gnuplot -e "set output 'graph.png'"
+```
+
+### Format du graphique généré
+
+Le graphique créé affiche :
+* Les observations sous forme de points orange
+* L'axe des abscisses (X) représentant le temps au format ISO8601
+* L'axe des ordonnées (Y) représentant les valeurs observées
+* Un format de sortie PNG
+
+### Dépendances
+
+Pour utiliser cette sous-commande, [Gnuplot](http://www.gnuplot.info/) doit être installé sur le système :
+
+```sh
+$ sudo apt-get update
+$ sudo apt-get install gnuplot
 ```

@@ -231,3 +231,29 @@ void timeseries_print_observations(const struct Timeseries* timeseries) {
     datetime_delete(&datetime);
   }
 }
+
+void timeseries_print_gnuplot_script(const struct Timeseries* timeseries) {
+  printf("#!/usr/bin/gnuplot\n");
+  printf("# Data\n");
+  printf("$data << EOD\n");
+  
+  for (size_t i = 0; i < timeseries->size; ++i) {
+    struct Datetime datetime = datetime_copy(&timeseries->start_datetime);
+    datetime_add_seconds(&datetime, timeseries->offsets[i]);
+    printf("%s %d\n", datetime_to_rfc3339_string(&datetime),
+           timeseries->values[i]);
+    datetime_delete(&datetime);
+  }
+  
+  printf("EOD\n");
+  printf("# General settings\n");
+  printf("set terminal png\n");
+  printf("set xlabel \"Time\" offset 0,-1\n");
+  printf("set xdata time\n");
+  printf("set timefmt \"%%Y-%%m-%%dT%%H:%%M:%%S\"\n");
+  printf("set ylabel \"Value\"\n");
+  printf("set nokey\n");
+  printf("set output \"timeseries.png\"\n");
+  printf("# Plot times\n");
+  printf("plot $data using 1:2 ps 2.0 pt 7 lc \"orange\" title \"0.9\" with points\n");
+}
