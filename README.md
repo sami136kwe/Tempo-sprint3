@@ -1,213 +1,103 @@
-# `tempo`: manipulation de séries temporelles
+# INF3135 — Construction et maintenance de logiciels
+## Application `tempo` — Travaux pratiques 1, 2 et 3
 
-L'application `tempo` sert à manipuler des [séries
-temporelles](https://fr.wikipedia.org/wiki/S%C3%A9rie_temporelle) (aussi
-appelées *séries chronologiques*), c'est-à-dire « une suite de valeurs
-numériques représentant l'évolution d'une quantité spécifique dans le temps ».
+Cours : INF3135 — Hiver 2025  
+Université du Québec à Montréal (UQAM)  
+Auteur : Sami Geagea
 
-## Dépendances
+---
 
-Afin de construire l'application, il faut avoir installé les éléments suivants:
+## Description
 
-* [GCC](https://gcc.gnu.org/): le compilateur C de GNU. Celui-ci peut être
-  installé à l'aide d'un gestionnaire de paquets
-* [Make](https://www.gnu.org/software/make/): un outil en ligne de commande
-  facilitant la mise en place de tâches automatiques. Cet outil peut aussi être
-  installé à l'aide d'un gestionnaire de paquets.
+Ce dépôt regroupe les trois travaux pratiques du cours INF3135, 
+qui consistent à concevoir et faire évoluer une application en C 
+nommée `tempo`. Cette application permet de manipuler des 
+**séries temporelles**, c'est-à-dire des suites de valeurs 
+numériques associées à des instants dans le temps.
 
-L'application dépend aussi des éléments suivants, qui sont livrés dans le dépôt afin de faciliter l'installation:
+---
 
-* [Bats](https://github.com/bats-core/bats-core): une suite d'application
-  facilitant la mise en place de tests unitaires shell. Il n'est pas nécessaire
-  d'installer Bats, qui est livré avec ce dépôt dans le répertoire `bats`
+## Dépôts GitHub
 
-## Installation
+Chaque sprint est disponible dans son propre dépôt avec l'historique complet des commits et toutes les branches :
 
-### Construction (*build*)
+| Sprint | Dépôt | Branches |
+|--------|-------|----------|
+| Sprint 1 — Mise en place | [Tempo-sprint1](https://github.com/sami136kwe/Tempo-sprint1) | `master`, `correction` |
+| Sprint 2 — Extension | [Tempo-sprint2](https://github.com/sami136kwe/Tempo-sprint2) | `master`, `validate-subcommands`, `dynamic-timeseries`, `interpolate-subcommand`, `interpolate-step-option` |
+| Sprint 3 — Bibliothèques | [Tempo-sprint3](https://github.com/sami136kwe/Tempo-sprint3) | `master`, `correction`, `from-json`, `test-timeseries-libtap`, `to-gnuplot` |
 
-Une fois les dépendances installées, on peut compiler l'application `tempo`
-à l'aide de la commande `make`:
+---
 
-```sh
-$ make
-# Ou de façon équivalente
-$ make build
+## Télécharger les 3 dépôts
+
+```bash
+git clone git@github.com:sami136kwe/Tempo-sprint1.git && \
+git clone git@github.com:sami136kwe/Tempo-sprint2.git && \
+git clone git@github.com:sami136kwe/Tempo-sprint3.git
 ```
 
-Cette commande produit entre autres l'exécutable principal `tempo` dans le
-répertoire `bin`.
+---
 
-Il est possible en tout temps de nettoyer les fichiers générés, incluant l'exécutable, à l'aide de la commande suivante:
+## Structure du dépôt
 
-```sh
-$ make clean
+```
+Tempo/
+├── Tempo-sprint1/   → TP1 : Mise en place de l'application tempo
+├── Tempo-sprint2/   → TP2 : Extension avec nouvelles fonctionnalités
+└── Tempo-sprint3/   → TP3 : Intégration de bibliothèques externes
 ```
 
-### Tests
+---
 
-On peut aussi lancer la suite de tests Bats à l'aide de `make`:
+## Sprint 1 — Mise en place de `tempo`
 
-```sh
-$ make test
+🔗 [github.com/sami136kwe/Tempo-sprint1](https://github.com/sami136kwe/Tempo-sprint1)
+
+### Description
+Implémentation des bases de l'application `tempo` avec 3 
+sous-commandes :
+- `tempo help` — Affiche le manuel d'utilisation
+- `tempo show` — Affiche les observations en ordre chronologique
+- `tempo describe` — Affiche les statistiques de la série temporelle
+
+### Compilation
+```bash
+cd Tempo-sprint1
+make
 ```
 
-Un rapport Bats est alors affiché sur la sortie standard.
+### Exécution
+```bash
+# Afficher l'aide
+bin/tempo help
 
-## Mise en contexte
+# Afficher les observations
+bin/tempo show < examples/6.ts
 
-Une *horodate* est un instant donné (en anglais, *timestamp*) et une *valeur*
-est une quantité quelconque qu'on associe à cette horodate. Une paire $`(t,
-v)`$, où $`t`$ est une horodate et $`v`$ une valeur, est donc appelée une
-*observation*. Une *série temporelle* peut donc être vue comme un ensemble
-d'observations. L'application `tempo` lit une série temporelle $`T`$ sur
-l'entrée standard (`stdin`), puis affiche sur la sortie standard (`stdout`)
-différentes informations sur $`T`$.
+# Afficher les statistiques
+bin/tempo describe < examples/6.ts
+```
 
-Considérons le flux de texte suivant, qui décrit une série temporelle de six
-observations:
-
+### Format d'entrée
 ```
 2025-09-01T00:00:00
 0 10
 28800 40
 57600 15
-86400 35
-115200 50
-144000 25
 ```
+La première ligne est l'horodate de référence (format `AAAA-mm-JJTHH:MM:SS`).  
+Les lignes suivantes sont des observations : `DÉCALAGE VALEUR`.
 
-Plus spécifiquement:
-
-* La première ligne du flux (`2025-09-01T00:00:00`) indique l'horodate de
-  référence de la série temporelle au format `AAAA-mm-JJTHH:MM:SS`. Ce format
-  est notamment reconnu par les standards
-  [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) et
-  [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339)
-* Les lignes suivantes du flux de texte contiennent les observations, une
-  observation par ligne
-* Une observation est une ligne contenant deux valeurs, séparées par une ou
-  plusieurs espaces (par exemple, `28800 40`)
-* La première valeur d'une observation (par exemple `28800`) est un entier
-  positif ou nul correspondant au décalage (en secondes) du moment où
-  l'observation est effectuée par rapport à l'horodate de référence
-  (`2025-09-01T00:00:00`)
-* La seconde valeur d'une observation (par exemple `40`) est un entier
-  correspondant à la valeur observée
-
-Une représentation graphique de la série temporelle ci-haut est disponible dans
-le fichier PNG suivant:
-![Une série temporelle de 6 observations](doc/timeseries.png)
-
-Plus généralement, pour être valide, un flux de texte doit respecter les
-contraintes suivantes:
-
-1. La première ligne du texte doit contenir une horodate valide respectant le
-   format `AAAA-mm-JJTHH:MM:SS`
-2. Chacune des autres lignes doit contenir une observation, c'est-à-dire
-   qu'elle doit avoir une correspondance complète avec l'expression régulière
-   étendue (ERE)
-   `OFFSET[:blank:]*VALUE[:blank:]*`,
-   où
-    * `OFFSET` est un entier non négatif
-    * `VALUE` est un entier
-3. Un *entier* est une chaîne de caractères qui a une correspondance complète
-   avec l'ERE `0|([-]?[1-9][0-9]*)`;
-4. Un *entier non négatif* est une chaîne de caractères qui a une
-   correspondance complète avec l'ERE `0|([1-9][0-9]*)`;
-
-Des exemples de séries temporelles valides (extension `.ts`) et invalides
-(extension `.invalid`) sont donnés dans le répertoire [`examples`](examples).
-
-## Utilisation
-
-L'application `tempo` utilise des *sous-commandes* afin de préciser
-l'information qu'on souhaite afficher à propos d'une série temporelle. Pour le
-moment, les quatre sous-commandes suivantes sont supportées:
-
-1. `tempo describe`
-2. `tempo help`
-2. `tempo interpolate`
-3. `tempo show`
-
-Elles sont détaillées dans les sous-sections qui suivent.
-
-## La sous-commande `help`
-
-Lorsque vous lancez le programme avec la sous-commande `help`, un manuel
-d'utilisation s'affiche sur la sortie standard:
-
-```text
-$ bin/tempo help
-Usage: tempo SUBCOMMAND
-Displays information about a timeseries.
-
-SUBCOMMAND is mandatory and must take one of the following values:
-  describe: describes the timeseries
-  help: shows this message
-  show: list the observations of the timeseries
-
-A timeseries is a text stream that must satisfy the following syntax:
-
-  1. The first line must contain a valid reference datetime with format
-       YYYY-mm-DDTHH:MM:SS
-     where YYYY are the 4 digits for the year,
-           mm are the 2 digits for the month,
-           DD are the 2 digits for the day,
-           HH are the 2 digits for the hour,
-           MM are the 2 digits for the minutes and
-           SS are the 2 digits for the seconds
-  2. Each of the remaining line must contain an observation, given with the
-     format
-       OFFSET VALUE
-     where OFFSET is a positive integer indicating the number of seconds offset
-                  with respect to the reference datetime and
-           VALUE is an integer
+### Format de sortie (`show`)
 ```
-
-## La sous-commande `show`
-
-La sous-commande `show` affiche la série temporelle sur la sortie standard dans
-un format différent de celui considéré lors de la lecture. Plus précisément,
-elle affiche en ordre chronologique chacune des observations, en commençant par
-l'horodate de l'observation, suivie par la valeur observée, en utilisant une
-espace comme séparateur.
-
-Par exemple, si on reprend la série temporelle illustrée plus haut (voir fichier
-[`examples/6.ts`](examples/6.ts)), alors on obtient ceci:
-
-```
-$ bin/tempo show < examples/6.ts
 2025-09-01T00:00:00 10
 2025-09-01T08:00:00 40
 2025-09-01T16:00:00 15
-2025-09-02T00:00:00 35
-2025-09-02T08:00:00 50
-2025-09-03T00:00:00 25
 ```
 
-Ainsi, la commande affiche les 6 observations contenues dans la série
-temporelle, en ordre chronologique, en utilisant l'espace comme séparateur.
-Chaque observation est donnée par une paire d'horodate et de valeur entière.
-
-## La sous-commande `describe`
-
-La sous-commande `describe` affiche différentes informations à propos de la
-série temporelle:
-
-* Son *domaine* (*domain*): le plus petit intervalle temporel recouvrant toutes
-  les horodates des observations
-* Son *codomaine* (*codomain*): le plus petit intervalle de valeurs recouvrant
-  toutes les valeurs des observations
-* Sa *taille* (*size*): le nombre d'observations qu'elle contient
-* Sa *durée* (*duration*): l'écart (en secondes) entre l'horodate de la
-  dernière observation et l'horodate de la première observation
-* Son *amplitude* (*amplitude*): l'écart entre la plus grande valeur observée
-  et la plus petite valeur observée
-
-Toujours avec l'exemple précédent:
-
+### Format de sortie (`describe`)
 ```
-$ bin/tempo describe < examples/6.ts
 Domain: [2025-09-01T00:00:00, 2025-09-03T00:00:00]
 Codomain: [10, 50]
 Size: 6
@@ -215,47 +105,131 @@ Duration: 172800
 Amplitude: 40
 ```
 
-## La sous-commande `interpolate`
-
-La sous-commande `interpolate` est similaire à la sous-commande `show`, mais
-affiche les interpolations en plus des observations contenues dans la série
-temporelle sur la sortie standard.
-
-Par exemple, si on prend la série temporelle décrite dans le fichier
-[`examples/3_10s.ts`](examples/3_10s.ts)), alors on obtient ceci:
-
-```
-$ bin/tempo interpolate < examples/3_10s.ts
-2025-09-01T09:00:00 10
-2025-09-01T09:00:01 12
-2025-09-01T09:00:02 14
-2025-09-01T09:00:03 16
-2025-09-01T09:00:04 18
-2025-09-01T09:00:05 20
-2025-09-01T09:00:06 19
-2025-09-01T09:00:07 18
-2025-09-01T09:00:08 17
-2025-09-01T09:00:09 16
-2025-09-01T09:00:10 15
+### Tests
+```bash
+make test
 ```
 
-Ainsi, la commande affiche les 3 observations contenues dans la série
-temporelle, en ordre chronologique, ainsi que toutes les valeurs interpolées
-entre ces observations, pour chaque seconde.
+---
 
-Par défaut, un pas d'une seconde est utilisé pour chaque interpolation.
-L'option `-s|--step N[smh]` permet de spécifier la durée du pas de temps entre
-chaque interpolation, où `N` est un entier strictement positif et `[smh]` est
-un caractère parmi `s` (secondes), `m` (minutes) et `h` (heures).
+## Sprint 2 — Extension de `tempo`
 
-Par exemple, en reprenant la série [`3_10s`](examples/3_10s.ts), pour
-interpoler selon un pas de 4 secondes, on peut donc entrer la commande
-suivante (noter que l'interpolation commence à l'horodate de départ et qu'elle
-continue tant qu'on n'a pas dépassé l'horodate de fin):
+🔗 [github.com/sami136kwe/Tempo-sprint2](https://github.com/sami136kwe/Tempo-sprint2)
 
+### Description
+Ajout de nouvelles fonctionnalités sur 4 branches indépendantes :
+- `validate-subcommands` — Validation stricte des sous-commandes
+- `dynamic-timeseries` — Allocation dynamique pour les séries temporelles
+- `interpolate-subcommand` — Nouvelle sous-commande `interpolate`
+- `interpolate-step-option` — Option `-s|--step` pour le pas d'interpolation
+
+### Compilation
+```bash
+cd Tempo-sprint2
+make
 ```
-$ bin/tempo interpolate -s 4s < examples/3_10s.ts
-2025-09-01T09:00:00 10
-2025-09-01T09:00:04 18
-2025-09-01T09:00:08 17
+
+### Nouvelle sous-commande : `interpolate`
+Interpole linéairement les valeurs entre chaque observation.
+
+```bash
+# Interpolation avec pas de 1 seconde (défaut)
+bin/tempo interpolate < examples/3_10s.ts
+
+# Interpolation avec pas de 2 secondes
+bin/tempo interpolate -s 2s < examples/3_10s.ts
+
+# Interpolation avec pas de 10 minutes
+bin/tempo interpolate -s 10m < examples/3_10s.ts
+
+# Interpolation avec pas de 4 heures
+bin/tempo interpolate -s 4h < examples/3_10s.ts
 ```
+
+### Codes de retour
+| Code | Signification |
+|------|--------------|
+| `0`  | Succès |
+| `1`  | Erreur d'utilisation |
+| `2`  | Erreur dans les données |
+| `3`  | Mémoire insuffisante |
+
+### Tests
+```bash
+make test
+```
+
+---
+
+## Sprint 3 — Intégration de bibliothèques
+
+🔗 [github.com/sami136kwe/Tempo-sprint3](https://github.com/sami136kwe/Tempo-sprint3)
+
+### Description
+Ajout de fonctionnalités avancées sur 3 branches :
+- `test-timeseries-libtap` — Tests unitaires avec Libtap
+- `from-json` — Lecture de séries temporelles au format JSON
+- `to-gnuplot` — Génération de scripts Gnuplot
+
+### Dépendances
+- [Jansson](https://github.com/akheron/jansson) — Lecture JSON
+- [Libtap](https://github.com/zorgnax/libtap) — Tests unitaires
+- [Gnuplot](http://www.gnuplot.info/) — Visualisation
+
+### Compilation
+```bash
+cd Tempo-sprint3
+make
+```
+
+### Option JSON (`-J|--from-json`)
+Permet de lire une série temporelle au format JSON :
+
+```bash
+bin/tempo show --from-json < examples/serie.json
+bin/tempo describe -J < examples/serie.json
+bin/tempo interpolate -J < examples/serie.json
+```
+
+Format JSON attendu :
+```json
+{
+  "origin": "2025-09-01T00:00:00",
+  "observations": [
+    {"offset": 0, "value": 10},
+    {"offset": 28800, "value": 40}
+  ]
+}
+```
+
+### Sous-commande `gnuplot`
+Génère un script Gnuplot pour visualiser la série temporelle :
+
+```bash
+# Générer le script
+bin/tempo gnuplot < examples/6.ts > plot.gp
+
+# Exécuter le script avec Gnuplot
+gnuplot -e "set output 'timeseries.png'" plot.gp
+```
+
+### Tests
+```bash
+make test
+```
+
+---
+
+## Technologies utilisées
+
+- **Langage :** C (compilé avec `g++ v12`)
+- **Outils :** Git, Make, Bats, Libtap, Jansson, Gnuplot
+- **Plateforme :** GitLab UQAM → GitHub
+
+---
+
+## Auteurs
+
+**Sami Geagea**  
+**Mehdi Lyafy**  
+**Alexandre Blondin Massé**
